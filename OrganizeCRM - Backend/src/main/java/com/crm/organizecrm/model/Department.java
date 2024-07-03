@@ -20,11 +20,11 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private String departmentName ;
-    private Integer departmentNumber ;
+    private String departmentDescription ;
 
     @OneToMany
     private List<Product> productList ;
 
-    @OneToMany
-    private List<user> usersList ;
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    private List<User> usersList ;
 }
