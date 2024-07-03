@@ -1,11 +1,7 @@
 package com.crm.organizecrm.model;
-
 import com.crm.organizecrm.enumirators.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -21,6 +17,7 @@ public class Customer {
 
     private String name ;
     private String lastName ;
+    @NonNull
     private String email ;
     private String phone_number ;
 
@@ -28,5 +25,5 @@ public class Customer {
     private Status status ;
 
     @ManyToMany(mappedBy = "customerList")
-    private List<user> usersList ;
+    private List<User> usersList ;
 }

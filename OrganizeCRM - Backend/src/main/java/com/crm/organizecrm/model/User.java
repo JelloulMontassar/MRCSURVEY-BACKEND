@@ -1,6 +1,5 @@
 package com.crm.organizecrm.model;
 import com.crm.organizecrm.enumirators.Role;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +10,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class user {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
@@ -26,8 +25,18 @@ public class user {
     private String phoneNumber ;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private boolean enabled;
+    private long resetToken;
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private  byte[] profileImage;
+    @Transient
+    private static byte[] defaultProfileImage;
 
     @ManyToMany
     List<Customer> customerList ;
+
+    @ManyToOne
+    Department department ;
 
 }
