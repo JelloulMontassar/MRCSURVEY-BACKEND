@@ -41,6 +41,7 @@ public class UserController {
             //ex.printStackTrace();
         }
 
+        //needs fixing
         return jwtUtil.generateToken(authRequest.getUserName());
 
     }
