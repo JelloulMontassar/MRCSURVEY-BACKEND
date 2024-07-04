@@ -26,17 +26,22 @@ public class Initialize implements CommandLineRunner {
     }
 
     private void createAdminUserIfNeeded() {
-        User adminUser = userService.getUserByEmail("admin@admin.com");
-        if (adminUser == null) {
+        User adminUser = null;
+        try {
+            adminUser = userService.getUserByEmail("admin@admin.com");
+        } catch (Exception e) {
+            // If user not found or any other exception
             adminUser = new User();
             adminUser.setFirstName("admin");
             adminUser.setLastName("admin");
             adminUser.setEmail("admin@admin.com");
             adminUser.setPhoneNumber("88888888");
-            adminUser.setPassword(passwordEncoder.bCryptPasswordEncoder().encode("admin"));
+            adminUser.setPassword(passwordEncoder.encode("admin"));
             adminUser.setRole(Role.ADMIN);
             adminUser.setEnabled(true);
             userService.createUser(adminUser);
         }
+
+
     }
 }

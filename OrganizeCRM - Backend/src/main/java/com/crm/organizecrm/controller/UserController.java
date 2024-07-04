@@ -1,10 +1,13 @@
 package com.crm.organizecrm.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import com.crm.organizecrm.service.JwtService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import com.crm.organizecrm.dto.AuthenticationRequest;
 import com.crm.organizecrm.model.User;
@@ -18,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "*")
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -33,16 +37,23 @@ public class UserController {
     @PostMapping("/authenticate")
     public String generateToken(@RequestBody AuthenticationRequest authRequest) throws Exception {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
+            log.info("username :{} password : {}",authRequest.getEmail(),authRequest.getPassword());
+
+            Authentication authentication =authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
             );
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            //fixed token generation (error was application.properties missing jwt.secret value)
+            String token = jwtUtil.genToken(userDetails, new HashMap<>());
+
+            return token ;
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new Exception("inavalid username/password");
-            //ex.printStackTrace();
+
         }
 
-        //needs fixing
-        return jwtUtil.generateToken(authRequest.getUserName());
+
 
     }
 
