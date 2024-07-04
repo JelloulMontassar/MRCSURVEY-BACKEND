@@ -48,7 +48,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req
-                                .requestMatchers("/user/create-hr", "/user/authenticate", "/user/ConfirmAccount/**", "/user/forgot-password/**","/user/**","/api-docs","/swagger-ui/**").permitAll()
+                                .requestMatchers("/user/create-hr", "/user/authenticate", "/user/ConfirmAccount/**", "/user/forgot-password/**","/user/**").permitAll()
                                 .requestMatchers("/config/disableAccount/**", "/config/enableAccount/**", "/config/registerAdmin", "/config/getAllUsers").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
