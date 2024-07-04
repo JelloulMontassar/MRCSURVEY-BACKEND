@@ -14,7 +14,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
@@ -33,7 +32,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(false);
-        config.addAllowedOrigin("*"); // Only this origin
+        config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
@@ -48,8 +47,13 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req
-                                .requestMatchers("/user/create-hr", "/user/authenticate", "/user/ConfirmAccount/**", "/user/forgot-password/**","/user/**").permitAll()
+                                .requestMatchers("/user/authenticate", "/user/ConfirmAccount/**", "/user/forgot-password/**").permitAll()
+                                .requestMatchers("/user/create-hr").hasRole("ADMIN")
                                 .requestMatchers("/config/disableAccount/**", "/config/enableAccount/**", "/config/registerAdmin", "/config/getAllUsers").hasAnyRole("ADMIN")
+                                .requestMatchers("/products/**").hasAnyRole("ADMIN", "HR", "PRODUCT_RESPONSABLE")
+                                .requestMatchers("/categories/**").hasAnyRole("ADMIN", "HR", "PRODUCT_RESPONSABLE")
+                                .requestMatchers("/departments/**").hasAnyRole("ADMIN", "HR")
+                                .requestMatchers("/customers/**").hasAnyRole("ADMIN", "HR", "EMPLOYEE", "PRODUCT_RESPONSABLE")
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -59,12 +63,5 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                     e.accessDeniedHandler(customAccessDeniedHandler);
                 });
         return httpSecurity.build();
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/teachers/deleteTeacher/27")
-                .allowedOrigins("*")
-                .allowCredentials(false);
     }
 }
