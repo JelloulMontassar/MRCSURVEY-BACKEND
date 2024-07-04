@@ -2,6 +2,7 @@ package com.crm.organizecrm.serviceImpl;
 
 import com.crm.organizecrm.dto.AuthenticationRequest;
 import com.crm.organizecrm.dto.AuthenticationResponse;
+import com.crm.organizecrm.dto.RegisterRequest;
 import com.crm.organizecrm.exception.TokenNotFoundOrIncorrectExeption;
 import com.crm.organizecrm.exception.UserException;
 import com.crm.organizecrm.exception.UserNotFoundException;
@@ -10,11 +11,12 @@ import com.crm.organizecrm.repository.UserRepository;
 import com.crm.organizecrm.service.JwtService;
 import com.crm.organizecrm.service.UserService;
 import com.crm.organizecrm.config.PasswordEncoder;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.crm.organizecrm.enumirators.Role;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+
     @Override
     public User createUser(User user) {
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
@@ -119,5 +122,22 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .messageResponse("You have been successfully authenticated!")
                 .build();
+    }
+    @Transactional
+    public void registerAccount(RegisterRequest request, Role role) {
+        boolean userExists = userRepository.findByEmail(request.getEmail()).isPresent();
+        if (userExists) {
+            throw new UserException("A user already exists with the same email");
+        }
+        var user = User.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
+                .password(passwordEncoder.bCryptPasswordEncoder().encode(request.getPassword()))
+                .role(role)
+                .enabled(false)
+                .build();
+        userRepository.save(user);
     }
 }

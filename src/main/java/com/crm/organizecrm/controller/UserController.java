@@ -1,16 +1,20 @@
 package com.crm.organizecrm.controller;
 
+import com.crm.organizecrm.dto.RegisterRequest;
+import com.crm.organizecrm.dto.RegisterResponse;
 import com.crm.organizecrm.model.User;
 import com.crm.organizecrm.serviceImpl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import com.crm.organizecrm.enumirators.Role;
 import java.io.IOException;
 import java.util.List;
+import com.crm.organizecrm.exception.UserException;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "*")
@@ -18,13 +22,27 @@ import java.util.List;
 public class UserController {
     @Autowired
     private final UserServiceImpl userService;
-
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
-    @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    @PostMapping("/create-hr")
+    public ResponseEntity<RegisterResponse> registerHR(@RequestBody RegisterRequest registerRequest) {
+        RegisterResponse registerResponse  = new RegisterResponse();
+        try {
+            userService.registerAccount(registerRequest, Role.HR);
+            registerResponse.setEmailResponse(registerRequest.getEmail());
+            registerResponse.setMessageResponse("Account Created");
+            return ResponseEntity.status(HttpStatus.CREATED).body(registerResponse);
+        }catch (UserException e) {
+            registerResponse.setMessageResponse(e.getMessage());
+            registerResponse.setEmailResponse(registerRequest.getEmail());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(registerResponse);
+        } catch (Exception e) {
+            registerResponse.setMessageResponse(e.getMessage());
+            registerResponse.setEmailResponse(registerRequest.getEmail());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(registerResponse);
+        }
     }
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
