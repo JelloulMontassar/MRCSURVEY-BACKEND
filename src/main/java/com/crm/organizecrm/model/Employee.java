@@ -1,34 +1,40 @@
 package com.crm.organizecrm.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
-
+@Entity
 @Getter
 @Setter
-@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
-
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id ;
-    private String productName ;
-    private String quantity ;
+    private Long id;
+
+    private String name;
+    private String email;
 
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
+
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
     @ManyToOne
-    @JoinColumn(name = "responsible_employee_id")
-    private Employee responsibleEmployee;
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "employee")
+    private List<Transaction> transactions;
+
+    @OneToMany(mappedBy = "responsibleEmployee")
+    private List<Product> stockedProducts;
 }
+

@@ -35,12 +35,13 @@ public class User implements UserDetails {
     private  byte[] profileImage;
     @Transient
     private static byte[] defaultProfileImage;
-
-    @ManyToMany
-    List<Customer> customerList ;
-
     @ManyToOne
     Department department ;
+    @OneToOne(mappedBy = "hrUser")
+    private Company company;
+
+    @OneToMany(mappedBy = "hrUser")
+    private List<Subscription> subscriptions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -25,6 +25,7 @@ public class UserController {
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
+
     @PostMapping("/create-hr")
     public ResponseEntity<RegisterResponse> registerHR(@RequestBody RegisterRequest registerRequest) {
         RegisterResponse registerResponse  = new RegisterResponse();
