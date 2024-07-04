@@ -1,24 +1,18 @@
 package com.crm.organizecrm.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-
 import com.crm.organizecrm.dto.AuthenticationResponse;
 import com.crm.organizecrm.service.JwtService;
 import com.crm.organizecrm.serviceImpl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import com.crm.organizecrm.dto.AuthenticationRequest;
 import com.crm.organizecrm.model.User;
-import com.crm.organizecrm.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.crm.organizecrm.exception.UserException;
 
@@ -26,14 +20,14 @@ import com.crm.organizecrm.exception.UserException;
 @RequestMapping("/user")
 @CrossOrigin(origins = "*")
 @Slf4j
-public class UserController {
+public class AuthenticationController {
 
     @Autowired
     private JwtService jwtUtil;
     @Autowired
     private final UserServiceImpl userService;
 
-    public UserController(UserServiceImpl userService) {
+    public AuthenticationController(UserServiceImpl userService) {
 
         this.userService = userService;
     }
