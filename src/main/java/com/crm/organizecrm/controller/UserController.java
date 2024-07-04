@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import com.crm.organizecrm.dto.AuthenticationResponse;
 import com.crm.organizecrm.service.JwtService;
+import com.crm.organizecrm.serviceImpl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.crm.organizecrm.exception.UserException;
 
 @RestController
 @RequestMapping("/user")
@@ -26,35 +30,40 @@ public class UserController {
 
     @Autowired
     private JwtService jwtUtil;
-    private final UserService userService;
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private final UserServiceImpl userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserServiceImpl userService) {
+
         this.userService = userService;
     }
 
     @PostMapping("/authenticate")
-    public String generateToken(@RequestBody AuthenticationRequest authRequest) throws Exception {
+    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
         try {
-            log.info("username :{} password : {}",authRequest.getEmail(),authRequest.getPassword());
+            AuthenticationResponse response = userService.authenticate(request);
+            return ResponseEntity.ok(response);
+        } catch (UserException e) {
+            System.out.println(e.getMessage());
+            if (e.getMessage().equals("Bad credentials")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        AuthenticationResponse.builder()
+                                .messageResponse("User not found")
+                                .build());
+            } else if (e.getMessage().equals("User is disabled")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                        AuthenticationResponse.builder()
+                                .messageResponse("User account is not active. Please confirm your email.")
+                                .build());
+            }
 
-            Authentication authentication =authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
-            );
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            //fixed token generation (error was application.properties missing jwt.secret value)
-            String token = jwtUtil.genToken(userDetails, new HashMap<>());
-
-            return token ;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new Exception("inavalid username/password");
-
+            else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                        AuthenticationResponse.builder()
+                                .messageResponse("An error occurred during authentication.")
+                                .build());
+            }
         }
-
-
-
     }
 
     @PostMapping

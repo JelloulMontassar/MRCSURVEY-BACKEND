@@ -25,16 +25,19 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String genToken(UserDetails userDetails, Map<String, String> map) {
-        return generateToken(map, userDetails, 1000 * 60 * 24);
+    public String genToken(UserDetails userDetails , Map<String , String> map){
+        return generateToken(map, userDetails, 1000*60*24);
     }
 
-    public String generateToken(Map<String, String> extraClaims, UserDetails userDetails, long expirationTimeMillis) {
+    public String generateToken(
+            Map<String, String> extraClaims,
+            UserDetails userDetails, long expirationTimeMillis ){
         Date issuedAt = new Date();
         Date expirationDate = new Date(issuedAt.getTime() + expirationTimeMillis);
         System.out.println("Expiration Date: " + expirationDate);
 
-        return Jwts.builder()
+        return Jwts
+                .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(issuedAt)
