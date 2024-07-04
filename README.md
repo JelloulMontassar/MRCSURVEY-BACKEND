@@ -47,6 +47,6 @@ The primary goal of OrganizeCRM is to provide businesses with a comprehensive to
 
 #### Installation
 
-1. **Clone the repository**
+**Clone the repository**
    ```sh
    git clone https://github.com/your_username/MRC-Survey.git
