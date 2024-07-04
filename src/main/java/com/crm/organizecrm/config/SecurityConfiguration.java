@@ -63,7 +63,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/teachers/deleteTeacher/27")
+        registry.addMapping("*")
                 .allowedOrigins("*")
                 .allowCredentials(false);
     }
