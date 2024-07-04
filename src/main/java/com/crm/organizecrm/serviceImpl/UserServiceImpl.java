@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +51,6 @@ public class UserServiceImpl implements UserService {
         existingUser.setRole(user.getRole());
         existingUser.setEnabled(user.isEnabled());
         existingUser.setProfileImage(user.getProfileImage());
-        existingUser.setCustomerList(user.getCustomerList());
         existingUser.setDepartment(user.getDepartment());
         return userRepository.save(existingUser);
     }
@@ -130,6 +128,7 @@ public class UserServiceImpl implements UserService {
             throw new UserException("A user already exists with the same email");
         }
         var user = User.builder()
+                .username(request.getUsername())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
