@@ -29,7 +29,7 @@ public class Department {
     @JoinColumn(name = "responsibleEmployee_id")
     private User responsibleEmployee;
 
-    @OneToMany(mappedBy = "department")
+    @OneToMany
     private List<Employee> employees;
 
   /*  @ManyToOne

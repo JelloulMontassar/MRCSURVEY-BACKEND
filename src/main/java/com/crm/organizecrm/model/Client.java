@@ -24,9 +24,9 @@ public class Client {
     @JoinColumn(name = "contact_id")
     private Contact contact;
 
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "company_id")
-    private Company company;*/
+    private Company company;
 
 
 

@@ -30,7 +30,7 @@ public class Company {
     @OneToMany(mappedBy = "company")
     private List<Client> client;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany
     private List<Product> products;
      /* @OneToMany(mappedBy = "company")
     private List<Department> departments;*/
