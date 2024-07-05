@@ -1,19 +1,28 @@
 package com.crm.organizecrm.serviceImpl;
 
+import com.crm.organizecrm.dto.AuthenticationRequest;
+import com.crm.organizecrm.dto.AuthenticationResponse;
 import com.crm.organizecrm.dto.UserDTO;
-import com.crm.organizecrm.enumirators.Role;
 import com.crm.organizecrm.exception.TokenNotFoundOrIncorrectExeption;
 import com.crm.organizecrm.exception.UserException;
 import com.crm.organizecrm.exception.UserNotFoundException;
 import com.crm.organizecrm.mapper.UserMapper;
 import com.crm.organizecrm.model.User;
 import com.crm.organizecrm.repository.UserRepository;
+import com.crm.organizecrm.service.JwtService;
 import com.crm.organizecrm.service.UserService;
 import com.crm.organizecrm.config.PasswordEncoder;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import com.crm.organizecrm.enumirators.Role;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,11 +31,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         User user = UserMapper.toEntity(userDTO);
-        user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
+        user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(userDTO.getPassword()));
         return UserMapper.toDTO(userRepository.save(user));
     }
 
@@ -55,8 +66,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserById(Long id) {
-        return UserMapper.toDTO(userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id)));
+        return userRepository.findById(id)
+                .map(UserMapper::toDTO)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
     @Override
@@ -68,14 +80,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserByUsername(String username) {
-        return UserMapper.toDTO(userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username)));
+        return userRepository.findByUsername(username)
+                .map(UserMapper::toDTO)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
     }
 
     @Override
     public UserDTO getUserByEmail(String email) {
-        return UserMapper.toDTO(userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email)));
+        return userRepository.findByEmail(email)
+                .map(UserMapper::toDTO)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
     }
 
     @Override
@@ -88,8 +102,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO loadUserByUsername(String username) {
-        return UserMapper.toDTO(userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username)));
+        return userRepository.findByUsername(username)
+                .map(UserMapper::toDTO)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
     }
 
     @Override
@@ -103,5 +118,30 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         user.setEnabled(false);
         userRepository.save(user);
+    }
+
+    @Override
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (AuthenticationException e) {
+            throw new UserException(e.getMessage());
+        }
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + request.getEmail()));
+        Map<String, String> map = new HashMap<>();
+        map.put("role", user.getRole().name());
+        String jwtToken = jwtService.genToken(user, map);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .role(user.getRole())
+                .email(user.getEmail())
+                .messageResponse("You have been successfully authenticated!")
+                .build();
     }
 }

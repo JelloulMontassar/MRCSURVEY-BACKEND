@@ -1,5 +1,7 @@
 package com.crm.organizecrm.service;
 
+import com.crm.organizecrm.dto.AuthenticationRequest;
+import com.crm.organizecrm.dto.AuthenticationResponse;
 import com.crm.organizecrm.dto.UserDTO;
 import com.crm.organizecrm.enumirators.Role;
 
@@ -16,4 +18,5 @@ public interface UserService {
     void resetPassword(long token, String newPassword);
     UserDTO loadUserByUsername(String username);
     void registerAccount(UserDTO userDTO, Role role);
+    AuthenticationResponse authenticate(AuthenticationRequest request);
 }
