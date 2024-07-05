@@ -54,11 +54,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(e -> {
-                    e.authenticationEntryPoint(customEntryPoint);
-                    e.accessDeniedHandler(customAccessDeniedHandler);
-                });
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return httpSecurity.build();
     }
 
