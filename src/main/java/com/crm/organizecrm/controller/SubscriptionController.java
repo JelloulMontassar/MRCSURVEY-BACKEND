@@ -1,6 +1,6 @@
 package com.crm.organizecrm.controller;
 
-import com.crm.organizecrm.model.Subscription;
+import com.crm.organizecrm.dto.SubscriptionDTO;
 import com.crm.organizecrm.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,13 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @PostMapping
-    public ResponseEntity<Subscription> createSubscription(@RequestBody Subscription subscription) {
-        return ResponseEntity.ok(subscriptionService.createSubscription(subscription));
+    public ResponseEntity<SubscriptionDTO> createSubscription(@RequestBody SubscriptionDTO subscriptionDTO) {
+        return ResponseEntity.ok(subscriptionService.createSubscription(subscriptionDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Subscription> updateSubscription(@PathVariable Long id, @RequestBody Subscription subscription) {
-        return ResponseEntity.ok(subscriptionService.updateSubscription(id, subscription));
+    public ResponseEntity<SubscriptionDTO> updateSubscription(@PathVariable Long id, @RequestBody SubscriptionDTO subscriptionDTO) {
+        return ResponseEntity.ok(subscriptionService.updateSubscription(id, subscriptionDTO));
     }
 
     @DeleteMapping("/{id}")
@@ -34,12 +34,12 @@ public class SubscriptionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Subscription>> getSubscriptionById(@PathVariable Long id) {
+    public ResponseEntity<Optional<SubscriptionDTO>> getSubscriptionById(@PathVariable Long id) {
         return ResponseEntity.ok(subscriptionService.getSubscriptionById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Subscription>> getAllSubscriptions() {
+    public ResponseEntity<List<SubscriptionDTO>> getAllSubscriptions() {
         return ResponseEntity.ok(subscriptionService.getAllSubscriptions());
     }
 }

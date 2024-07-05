@@ -1,6 +1,8 @@
 package com.crm.organizecrm.serviceImpl;
 
+import com.crm.organizecrm.dto.SubscriptionDTO;
 import com.crm.organizecrm.exception.ResourceNotFoundException;
+import com.crm.organizecrm.mapper.SubscriptionMapper;
 import com.crm.organizecrm.model.Subscription;
 import com.crm.organizecrm.repository.SubscriptionRepository;
 import com.crm.organizecrm.service.SubscriptionService;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,20 +20,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
 
     @Override
-    public Subscription createSubscription(Subscription subscription) {
-        return subscriptionRepository.save(subscription);
+    public SubscriptionDTO createSubscription(SubscriptionDTO subscriptionDTO) {
+        Subscription subscription = SubscriptionMapper.toEntity(subscriptionDTO);
+        return SubscriptionMapper.toDTO(subscriptionRepository.save(subscription));
     }
 
     @Override
-    public Subscription updateSubscription(Long id, Subscription subscription) {
+    public SubscriptionDTO updateSubscription(Long id, SubscriptionDTO subscriptionDTO) {
         Subscription existingSubscription = subscriptionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Subscription not found with id: " + id));
-        existingSubscription.setPlanName(subscription.getPlanName());
-        existingSubscription.setFeatures(subscription.getFeatures());
-        existingSubscription.setPrice(subscription.getPrice());
-        existingSubscription.setDuration(subscription.getDuration());
-        existingSubscription.setHrUser(subscription.getHrUser());
-        return subscriptionRepository.save(existingSubscription);
+        existingSubscription.setPlanName(subscriptionDTO.getPlanName());
+        existingSubscription.setFeatures(subscriptionDTO.getFeatures());
+        existingSubscription.setPrice(subscriptionDTO.getPrice());
+        existingSubscription.setDuration(subscriptionDTO.getDuration());
+        return SubscriptionMapper.toDTO(subscriptionRepository.save(existingSubscription));
     }
 
     @Override
@@ -41,12 +44,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public Optional<Subscription> getSubscriptionById(Long id) {
-        return subscriptionRepository.findById(id);
+    public Optional<SubscriptionDTO> getSubscriptionById(Long id) {
+        return subscriptionRepository.findById(id).map(SubscriptionMapper::toDTO);
     }
 
     @Override
-    public List<Subscription> getAllSubscriptions() {
-        return subscriptionRepository.findAll();
+    public List<SubscriptionDTO> getAllSubscriptions() {
+        return subscriptionRepository.findAll().stream()
+                .map(SubscriptionMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
