@@ -1,13 +1,13 @@
 package com.crm.organizecrm.service;
 
-import com.crm.organizecrm.model.Category;
+import com.crm.organizecrm.dto.CategoryDTO;
 
 import java.util.List;
 
 public interface CategoryService {
-    Category createCategory(Category category);
-    Category updateCategory(Long id, Category category);
+    CategoryDTO createCategory(CategoryDTO categoryDTO);
+    CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO);
     void deleteCategory(Long id);
-    Category getCategoryById(Long id);
-    List<Category> getAllCategories();
+    CategoryDTO getCategoryById(Long id);
+    List<CategoryDTO> getAllCategories();
 }
