@@ -34,7 +34,7 @@ public class AuthenticationController {
             return ResponseEntity.ok(response);
         } catch (UserException e) {
             System.out.println(e.getMessage());
-            if (e.getMessage().equals("Bad credentials")) {
+            if (e.getMessage().equals("Bad credentials.")) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         AuthenticationResponse.builder()
                                 .messageResponse("User not found")
