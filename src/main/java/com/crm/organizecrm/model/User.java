@@ -14,10 +14,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
-
-
-
 public class User implements UserDetails {
 
     @Id
@@ -35,13 +31,17 @@ public class User implements UserDetails {
     private Role role;
     private boolean enabled;
     private long resetToken;
+
     @Lob
     @Column(columnDefinition = "MEDIUMBLOB")
     private  byte[] profileImage;
+
     @Transient
     private static byte[] defaultProfileImage;
-   /* @ManyToOne
+
+    /* @ManyToOne
     Department department ;*/
+
     @OneToMany(mappedBy = "responsibleEmployee")
     List<Department> departments ;
 
@@ -50,7 +50,6 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "hrUser")
     private List<Subscription> subscriptions;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

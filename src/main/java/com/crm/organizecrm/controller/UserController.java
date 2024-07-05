@@ -2,39 +2,47 @@ package com.crm.organizecrm.controller;
 
 import com.crm.organizecrm.dto.RegisterRequest;
 import com.crm.organizecrm.dto.RegisterResponse;
-import com.crm.organizecrm.model.User;
-import com.crm.organizecrm.serviceImpl.UserServiceImpl;
+import com.crm.organizecrm.dto.UserDTO;
+import com.crm.organizecrm.enumirators.Role;
+import com.crm.organizecrm.exception.UserException;
+import com.crm.organizecrm.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.crm.organizecrm.enumirators.Role;
+
 import java.io.IOException;
 import java.util.List;
-import com.crm.organizecrm.exception.UserException;
+
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @CrossOrigin(origins = "*")
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private final UserServiceImpl userService;
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
+
+    private final UserService userService;
 
     @PostMapping("/create-hr")
     public ResponseEntity<RegisterResponse> registerHR(@RequestBody RegisterRequest registerRequest) {
-        RegisterResponse registerResponse  = new RegisterResponse();
+        RegisterResponse registerResponse = new RegisterResponse();
         try {
-            userService.registerAccount(registerRequest, Role.HR);
+            UserDTO userDTO = UserDTO.builder()
+                    .username(registerRequest.getUsername())
+                    .email(registerRequest.getEmail())
+                    .firstName(registerRequest.getFirstName())
+                    .lastName(registerRequest.getLastName())
+                    .phoneNumber(registerRequest.getPhoneNumber())
+                    .password(registerRequest.getPassword())
+                    .build();
+            userService.registerAccount(userDTO, Role.HR);
             registerResponse.setEmailResponse(registerRequest.getEmail());
             registerResponse.setMessageResponse("Account Created");
             return ResponseEntity.status(HttpStatus.CREATED).body(registerResponse);
-        }catch (UserException e) {
+        } catch (UserException e) {
             registerResponse.setMessageResponse(e.getMessage());
             registerResponse.setEmailResponse(registerRequest.getEmail());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(registerResponse);
@@ -45,36 +53,43 @@ public class UserController {
                     .body(registerResponse);
         }
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateUser(id, userDTO));
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
+
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
     @GetMapping("/username/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUserByUsername(username));
     }
+
     @GetMapping("/email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
+
     @PostMapping("/profile/image")
     public ResponseEntity<Void> uploadImage(@RequestParam MultipartFile file, Authentication authentication) throws IOException {
-        User user = userService.getUserByEmail(authentication.getName());
-        user.setProfileImage(file.getBytes());
-        userService.updateUser(user.getId(), user);
+        UserDTO userDTO = userService.getUserByEmail(authentication.getName());
+        userDTO.setProfileImage(file.getBytes());
+        userService.updateUser(userDTO.getId(), userDTO);
         return ResponseEntity.ok().build();
     }
 }

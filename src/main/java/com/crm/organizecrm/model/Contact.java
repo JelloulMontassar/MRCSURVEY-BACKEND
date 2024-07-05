@@ -20,11 +20,11 @@ public class Contact {
     private String email;
     private String phone;
 
-  /*  @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;*/
-
     @OneToOne(mappedBy = "contact")
     private Client client;
+
+    /*  @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;*/
 }
 

@@ -1,13 +1,13 @@
 package com.crm.organizecrm.service;
 
-import com.crm.organizecrm.model.Department;
+import com.crm.organizecrm.dto.DepartmentDTO;
 
 import java.util.List;
 
 public interface DepartmentService {
-    Department createDepartment(Department department);
-    Department updateDepartment(Long id, Department department);
+    DepartmentDTO createDepartment(DepartmentDTO departmentDTO);
+    DepartmentDTO updateDepartment(Long id, DepartmentDTO departmentDTO);
     void deleteDepartment(Long id);
-    Department getDepartmentById(Long id);
-    List<Department> getAllDepartments();
+    DepartmentDTO getDepartmentById(Long id);
+    List<DepartmentDTO> getAllDepartments();
 }

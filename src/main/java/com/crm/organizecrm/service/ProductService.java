@@ -1,13 +1,13 @@
 package com.crm.organizecrm.service;
 
-import com.crm.organizecrm.model.Product;
+import com.crm.organizecrm.dto.ProductDTO;
 
 import java.util.List;
 
 public interface ProductService {
-    Product createProduct(Product product);
-    Product updateProduct(Long id, Product product);
+    ProductDTO createProduct(ProductDTO productDTO);
+    ProductDTO updateProduct(Long id, ProductDTO productDTO);
     void deleteProduct(Long id);
-    Product getProductById(Long id);
-    List<Product> getAllProducts();
+    ProductDTO getProductById(Long id);
+    List<ProductDTO> getAllProducts();
 }

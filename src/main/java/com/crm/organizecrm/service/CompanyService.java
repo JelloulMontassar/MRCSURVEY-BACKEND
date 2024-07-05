@@ -1,14 +1,14 @@
 package com.crm.organizecrm.service;
 
-import com.crm.organizecrm.model.Company;
+import com.crm.organizecrm.dto.CompanyDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CompanyService {
-    Company createCompany(Company company);
-    Company updateCompany(Long id, Company company);
+    CompanyDTO createCompany(CompanyDTO companyDTO);
+    CompanyDTO updateCompany(Long id, CompanyDTO companyDTO);
     void deleteCompany(Long id);
-    Optional<Company> getCompanyById(Long id);
-    List<Company> getAllCompanies();
+    Optional<CompanyDTO> getCompanyById(Long id);
+    List<CompanyDTO> getAllCompanies();
 }

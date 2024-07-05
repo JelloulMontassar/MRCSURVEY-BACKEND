@@ -27,9 +27,8 @@ public class Transaction {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    /*  @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;*/
-
 }
 

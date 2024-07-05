@@ -1,18 +1,22 @@
 package com.crm.organizecrm.service;
 
-import com.crm.organizecrm.model.User;
+import com.crm.organizecrm.dto.AuthenticationRequest;
+import com.crm.organizecrm.dto.AuthenticationResponse;
+import com.crm.organizecrm.dto.UserDTO;
+import com.crm.organizecrm.enumirators.Role;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
-    User createUser(User user);
-    User updateUser(Long id, User user);
+    UserDTO createUser(UserDTO userDTO);
+    UserDTO updateUser(Long id, UserDTO userDTO);
     void deleteUser(Long id);
-    User getUserById(Long id);
-    List<User> getAllUsers();
-    User getUserByUsername(String username);
-    User getUserByEmail(String email);
+    UserDTO getUserById(Long id);
+    List<UserDTO> getAllUsers();
+    UserDTO getUserByUsername(String username);
+    UserDTO getUserByEmail(String email);
     void resetPassword(long token, String newPassword);
-    User loadUserByUsername(String username);
+    UserDTO loadUserByUsername(String username);
+    void registerAccount(UserDTO userDTO, Role role);
+    AuthenticationResponse authenticate(AuthenticationRequest request);
 }

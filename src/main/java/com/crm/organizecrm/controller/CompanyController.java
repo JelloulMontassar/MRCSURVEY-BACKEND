@@ -1,6 +1,6 @@
 package com.crm.organizecrm.controller;
 
-import com.crm.organizecrm.model.Company;
+import com.crm.organizecrm.dto.CompanyDTO;
 import com.crm.organizecrm.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,13 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @PostMapping
-    public ResponseEntity<Company> createCompany(@RequestBody Company company) {
-        return ResponseEntity.ok(companyService.createCompany(company));
+    public ResponseEntity<CompanyDTO> createCompany(@RequestBody CompanyDTO companyDTO) {
+        return ResponseEntity.ok(companyService.createCompany(companyDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Company> updateCompany(@PathVariable Long id, @RequestBody Company company) {
-        return ResponseEntity.ok(companyService.updateCompany(id, company));
+    public ResponseEntity<CompanyDTO> updateCompany(@PathVariable Long id, @RequestBody CompanyDTO companyDTO) {
+        return ResponseEntity.ok(companyService.updateCompany(id, companyDTO));
     }
 
     @DeleteMapping("/{id}")
@@ -34,12 +34,12 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Company>> getCompanyById(@PathVariable Long id) {
+    public ResponseEntity<Optional<CompanyDTO>> getCompanyById(@PathVariable Long id) {
         return ResponseEntity.ok(companyService.getCompanyById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Company>> getAllCompanies() {
+    public ResponseEntity<List<CompanyDTO>> getAllCompanies() {
         return ResponseEntity.ok(companyService.getAllCompanies());
     }
 }

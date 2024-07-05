@@ -20,9 +20,6 @@ public class Company {
     @Lob
     @Column(columnDefinition = "BLOB")
     private byte[] logo;
-   /* @OneToOne
-    @JoinColumn(name = "subscription_id")
-    private Subscription subscription;*/
 
     @OneToOne
     @JoinColumn(name = "hr_user_id")
@@ -34,13 +31,18 @@ public class Company {
 
     @OneToMany
     private List<Product> products;
-     /* @OneToMany(mappedBy = "company")
+
+    /* @OneToOne
+    @JoinColumn(name = "subscription_id")
+    private Subscription subscription;*/
+
+    /* @OneToMany(mappedBy = "company")
     private List<Department> departments;*/
 
     /*@OneToMany(mappedBy = "company")
     private List<Employee> employees;*/
 
-   /* @OneToMany(mappedBy = "company")
+    /* @OneToMany(mappedBy = "company")
     private List<Contact> contacts;
-*/
+    */
 }

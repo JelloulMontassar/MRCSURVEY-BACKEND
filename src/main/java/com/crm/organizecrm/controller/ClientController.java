@@ -1,6 +1,6 @@
 package com.crm.organizecrm.controller;
 
-import com.crm.organizecrm.model.Client;
+import com.crm.organizecrm.dto.ClientDTO;
 import com.crm.organizecrm.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,13 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping
-    public ResponseEntity<Client> createClient(@RequestBody Client client) {
-        return ResponseEntity.ok(clientService.createClient(client));
+    public ResponseEntity<ClientDTO> createClient(@RequestBody ClientDTO clientDTO) {
+        return ResponseEntity.ok(clientService.createClient(clientDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client client) {
-        return ResponseEntity.ok(clientService.updateClient(id, client));
+    public ResponseEntity<ClientDTO> updateClient(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
+        return ResponseEntity.ok(clientService.updateClient(id, clientDTO));
     }
 
     @DeleteMapping("/{id}")
@@ -34,12 +34,12 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Client>> getClientById(@PathVariable Long id) {
+    public ResponseEntity<Optional<ClientDTO>> getClientById(@PathVariable Long id) {
         return ResponseEntity.ok(clientService.getClientById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Client>> getAllClients() {
+    public ResponseEntity<List<ClientDTO>> getAllClients() {
         return ResponseEntity.ok(clientService.getAllClients());
     }
 }

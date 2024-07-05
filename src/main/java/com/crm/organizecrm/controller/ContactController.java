@@ -1,6 +1,6 @@
 package com.crm.organizecrm.controller;
 
-import com.crm.organizecrm.model.Contact;
+import com.crm.organizecrm.dto.ContactDTO;
 import com.crm.organizecrm.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,13 @@ public class ContactController {
     private final ContactService contactService;
 
     @PostMapping
-    public ResponseEntity<Contact> createContact(@RequestBody Contact contact) {
-        return ResponseEntity.ok(contactService.createContact(contact));
+    public ResponseEntity<ContactDTO> createContact(@RequestBody ContactDTO contactDTO) {
+        return ResponseEntity.ok(contactService.createContact(contactDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Contact> updateContact(@PathVariable Long id, @RequestBody Contact contact) {
-        return ResponseEntity.ok(contactService.updateContact(id, contact));
+    public ResponseEntity<ContactDTO> updateContact(@PathVariable Long id, @RequestBody ContactDTO contactDTO) {
+        return ResponseEntity.ok(contactService.updateContact(id, contactDTO));
     }
 
     @DeleteMapping("/{id}")
@@ -34,12 +34,12 @@ public class ContactController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Contact>> getContactById(@PathVariable Long id) {
+    public ResponseEntity<Optional<ContactDTO>> getContactById(@PathVariable Long id) {
         return ResponseEntity.ok(contactService.getContactById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Contact>> getAllContacts() {
+    public ResponseEntity<List<ContactDTO>> getAllContacts() {
         return ResponseEntity.ok(contactService.getAllContacts());
     }
 }

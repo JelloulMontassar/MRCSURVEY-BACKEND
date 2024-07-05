@@ -1,6 +1,8 @@
 package com.crm.organizecrm.serviceImpl;
 
+import com.crm.organizecrm.dto.ContactDTO;
 import com.crm.organizecrm.exception.ResourceNotFoundException;
+import com.crm.organizecrm.mapper.ContactMapper;
 import com.crm.organizecrm.model.Contact;
 import com.crm.organizecrm.repository.ContactRepository;
 import com.crm.organizecrm.service.ContactService;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,19 +20,19 @@ public class ContactServiceImpl implements ContactService {
     private final ContactRepository contactRepository;
 
     @Override
-    public Contact createContact(Contact contact) {
-        return contactRepository.save(contact);
+    public ContactDTO createContact(ContactDTO contactDTO) {
+        Contact contact = ContactMapper.toEntity(contactDTO);
+        return ContactMapper.toDTO(contactRepository.save(contact));
     }
 
     @Override
-    public Contact updateContact(Long id, Contact contact) {
+    public ContactDTO updateContact(Long id, ContactDTO contactDTO) {
         Contact existingContact = contactRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + id));
-        existingContact.setName(contact.getName());
-        existingContact.setEmail(contact.getEmail());
-        existingContact.setPhone(contact.getPhone());
-        existingContact.setClient(contact.getClient());
-        return contactRepository.save(existingContact);
+        existingContact.setName(contactDTO.getName());
+        existingContact.setEmail(contactDTO.getEmail());
+        existingContact.setPhone(contactDTO.getPhone());
+        return ContactMapper.toDTO(contactRepository.save(existingContact));
     }
 
     @Override
@@ -40,12 +43,14 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Optional<Contact> getContactById(Long id) {
-        return contactRepository.findById(id);
+    public Optional<ContactDTO> getContactById(Long id) {
+        return contactRepository.findById(id).map(ContactMapper::toDTO);
     }
 
     @Override
-    public List<Contact> getAllContacts() {
-        return contactRepository.findAll();
+    public List<ContactDTO> getAllContacts() {
+        return contactRepository.findAll().stream()
+                .map(ContactMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

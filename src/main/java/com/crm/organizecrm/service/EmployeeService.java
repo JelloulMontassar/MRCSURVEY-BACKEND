@@ -1,13 +1,13 @@
 package com.crm.organizecrm.service;
 
-import com.crm.organizecrm.model.Employee;
+import com.crm.organizecrm.dto.EmployeeDTO;
 
 import java.util.List;
 
 public interface EmployeeService {
-    Employee createEmployee(Employee employee);
-    Employee updateEmployee(Long id, Employee employee);
+    EmployeeDTO createEmployee(EmployeeDTO employeeDTO);
+    EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO);
     void deleteEmployee(Long id);
-    Employee getEmployeeById(Long id);
-    List<Employee> getAllEmployees();
+    EmployeeDTO getEmployeeById(Long id);
+    List<EmployeeDTO> getAllEmployees();
 }
