@@ -26,12 +26,22 @@ jobs:
 
     - name: Decrypt secrets
       env:
-        GPG_PASSPHRASE: "376e43kawirm6x8x1hnihkbetpsejp"
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       run: |
         gpg --batch --passphrase "$GPG_PASSPHRASE" --decrypt --output secrets.txt secrets.txt.gpg
         source secrets.txt
         echo "SPRING_CLOUD_VAULT_URI=$SPRING_CLOUD_VAULT_URI" >> $GITHUB_ENV
         echo "SPRING_CLOUD_VAULT_TOKEN=$SPRING_CLOUD_VAULT_TOKEN" >> $GITHUB_ENV
+
+    - name: Validate URI
+      run: |
+        echo "Validating URI..."
+        echo "SPRING_CLOUD_VAULT_URI=${{ env.SPRING_CLOUD_VAULT_URI }}"
+        echo "SPRING_CLOUD_VAULT_TOKEN=${{ env.SPRING_CLOUD_VAULT_TOKEN }}"
+        if [[ ! "${{ env.SPRING_CLOUD_VAULT_URI }}" =~ ^https:// ]]; then
+          echo "Invalid URI: ${{ env.SPRING_CLOUD_VAULT_URI }}"
+          exit 1
+        fi
 
     - name: Fetch additional secrets from Vault
       id: vault
