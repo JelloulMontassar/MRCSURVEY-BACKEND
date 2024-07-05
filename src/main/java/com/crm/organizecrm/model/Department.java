@@ -26,9 +26,14 @@ public class Department {
     private List<Product> products;
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @JoinColumn(name = "responsibleEmployee_id")
+    private User responsibleEmployee;
 
     @OneToMany(mappedBy = "department")
     private List<Employee> employees;
+
+  /*  @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;*/
+
 }

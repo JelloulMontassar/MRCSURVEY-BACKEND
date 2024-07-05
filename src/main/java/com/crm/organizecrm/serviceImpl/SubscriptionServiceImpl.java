@@ -30,7 +30,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         existingSubscription.setPrice(subscription.getPrice());
         existingSubscription.setDuration(subscription.getDuration());
         existingSubscription.setHrUser(subscription.getHrUser());
-        existingSubscription.setCompany(subscription.getCompany());
         return subscriptionRepository.save(existingSubscription);
     }
 

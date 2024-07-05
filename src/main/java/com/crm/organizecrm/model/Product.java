@@ -25,10 +25,12 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
-    @ManyToOne
+
+    /*@ManyToOne
     @JoinColumn(name = "company_id")
-    private Company company;
-    @ManyToOne
+    private Company company;*/
+
+  /*  @ManyToOne
     @JoinColumn(name = "responsible_employee_id")
-    private Employee responsibleEmployee;
+    private Employee responsibleEmployee;*/
 }

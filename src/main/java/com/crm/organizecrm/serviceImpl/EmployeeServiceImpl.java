@@ -26,8 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(() -> new UserNotFoundException("Employee not found with id: " + id));
         existingEmployee.setName(employee.getName());
         existingEmployee.setEmail(employee.getEmail());
-        existingEmployee.setDepartment(employee.getDepartment());
-        existingEmployee.setCompany(employee.getCompany());
+        existingEmployee.setTransactions(employee.getTransactions());
         existingEmployee.setUser(employee.getUser());
         return employeeRepository.save(existingEmployee);
     }

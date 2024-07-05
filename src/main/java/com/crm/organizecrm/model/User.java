@@ -14,7 +14,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
+
+
+
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
@@ -35,8 +40,11 @@ public class User implements UserDetails {
     private  byte[] profileImage;
     @Transient
     private static byte[] defaultProfileImage;
-    @ManyToOne
-    Department department ;
+   /* @ManyToOne
+    Department department ;*/
+    @OneToMany(mappedBy = "responsibleEmployee")
+    List<Department> departments ;
+
     @OneToOne(mappedBy = "hrUser")
     private Company company;
 
