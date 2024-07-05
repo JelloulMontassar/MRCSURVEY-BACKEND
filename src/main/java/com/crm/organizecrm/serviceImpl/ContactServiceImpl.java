@@ -28,7 +28,7 @@ public class ContactServiceImpl implements ContactService {
         existingContact.setName(contact.getName());
         existingContact.setEmail(contact.getEmail());
         existingContact.setPhone(contact.getPhone());
-        existingContact.setCompany(contact.getCompany());
+        existingContact.setClient(contact.getClient());
         return contactRepository.save(existingContact);
     }
 

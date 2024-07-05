@@ -19,19 +19,8 @@ public class Employee {
     private String name;
     private String email;
 
-   /* @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;*/
-
-   /* @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
-*/
-
-
     @OneToMany
     private List<Client> clients ;
-
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -40,9 +29,17 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private List<Transaction> transactions;
 
-
    /* @OneToMany(mappedBy = "responsibleEmployee")*/
     @OneToMany
     private List<Product> stockedProducts;
+
+   /* @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;*/
+
+   /* @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+    */
 }
 

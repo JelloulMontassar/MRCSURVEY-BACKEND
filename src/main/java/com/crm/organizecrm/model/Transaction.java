@@ -23,14 +23,13 @@ public class Transaction {
     @JoinColumn(name = "client_id")
     private Client client;
 
-  /*  @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;*/
-
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
+    /*  @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;*/
 
 }
 

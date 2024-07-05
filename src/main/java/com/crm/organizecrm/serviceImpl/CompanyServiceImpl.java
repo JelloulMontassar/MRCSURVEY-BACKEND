@@ -26,13 +26,9 @@ public class CompanyServiceImpl implements CompanyService {
         Company existingCompany = companyRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Company not found with id: " + id));
         existingCompany.setName(company.getName());
-        existingCompany.setSubscription(company.getSubscription());
         existingCompany.setHrUser(company.getHrUser());
-        existingCompany.setDepartments(company.getDepartments());
-        existingCompany.setEmployees(company.getEmployees());
-        existingCompany.setContacts(company.getContacts());
-
         existingCompany.setProducts(company.getProducts());
+        existingCompany.setClient(company.getClient());
         return companyRepository.save(existingCompany);
     }
 

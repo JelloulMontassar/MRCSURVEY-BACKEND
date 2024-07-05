@@ -51,7 +51,6 @@ public class UserServiceImpl implements UserService {
         existingUser.setRole(user.getRole());
         existingUser.setEnabled(user.isEnabled());
         existingUser.setProfileImage(user.getProfileImage());
-        existingUser.setDepartment(user.getDepartment());
         return userRepository.save(existingUser);
     }
 

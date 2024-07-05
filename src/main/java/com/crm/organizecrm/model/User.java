@@ -44,6 +44,7 @@ public class User implements UserDetails {
     Department department ;*/
     @OneToMany(mappedBy = "responsibleEmployee")
     List<Department> departments ;
+
     @OneToOne(mappedBy = "hrUser")
     private Company company;
 

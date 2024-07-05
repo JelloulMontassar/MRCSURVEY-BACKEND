@@ -28,7 +28,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         existingDepartment.setDepartmentDescription(department.getDepartmentDescription());
         existingDepartment.setProducts(department.getProducts());
         existingDepartment.setEmployees(department.getEmployees());
-        existingDepartment.setCompany(department.getCompany());
         return departmentRepository.save(existingDepartment);
     }
 
