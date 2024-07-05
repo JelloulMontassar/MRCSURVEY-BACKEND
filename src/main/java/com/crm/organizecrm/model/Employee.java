@@ -19,22 +19,28 @@ public class Employee {
     private String name;
     private String email;
 
-    @ManyToOne
+   /* @ManyToOne
     @JoinColumn(name = "department_id")
-    private Department department;
+    private Department department;*/
 
-    @ManyToOne
+   /* @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+*/
 
-    @ManyToOne
+    @OneToMany
+    private List<Client> clients ;
+
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "employee")
     private List<Transaction> transactions;
 
-    @OneToMany(mappedBy = "responsibleEmployee")
+
+   /* @OneToMany(mappedBy = "responsibleEmployee")*/
+    @OneToMany
     private List<Product> stockedProducts;
 }
 

@@ -31,7 +31,7 @@ public class CompanyServiceImpl implements CompanyService {
         existingCompany.setDepartments(company.getDepartments());
         existingCompany.setEmployees(company.getEmployees());
         existingCompany.setContacts(company.getContacts());
-        existingCompany.setClients(company.getClients());
+
         existingCompany.setProducts(company.getProducts());
         return companyRepository.save(existingCompany);
     }

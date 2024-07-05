@@ -18,26 +18,27 @@ public class Company {
 
     private String name;
 
-    @OneToOne
+   /* @OneToOne
     @JoinColumn(name = "subscription_id")
-    private Subscription subscription;
+    private Subscription subscription;*/
 
     @OneToOne
     @JoinColumn(name = "hr_user_id")
     private User hrUser;
 
-    @OneToMany(mappedBy = "company")
-    private List<Department> departments;
 
     @OneToMany(mappedBy = "company")
-    private List<Employee> employees;
-
-    @OneToMany(mappedBy = "company")
-    private List<Contact> contacts;
-
-    @OneToMany(mappedBy = "company")
-    private List<Customer> clients;
+    private List<Client> client;
 
     @OneToMany(mappedBy = "company")
     private List<Product> products;
+     /* @OneToMany(mappedBy = "company")
+    private List<Department> departments;*/
+
+    /*@OneToMany(mappedBy = "company")
+    private List<Employee> employees;*/
+
+   /* @OneToMany(mappedBy = "company")
+    private List<Contact> contacts;
+*/
 }

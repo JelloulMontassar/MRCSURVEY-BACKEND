@@ -23,8 +23,8 @@ public class Subscription {
     @JoinColumn(name = "hr_user_id")
     private User hrUser;
 
-    @OneToOne(mappedBy = "subscription")
-    private Company company;
+    /*@OneToOne(mappedBy = "subscription")
+    private Company company;*/
 
 }
 

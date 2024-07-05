@@ -40,8 +40,10 @@ public class User implements UserDetails {
     private  byte[] profileImage;
     @Transient
     private static byte[] defaultProfileImage;
-    @ManyToOne
-    Department department ;
+   /* @ManyToOne
+    Department department ;*/
+    @OneToMany(mappedBy = "responsibleEmployee")
+    List<Department> departments ;
     @OneToOne(mappedBy = "hrUser")
     private Company company;
 

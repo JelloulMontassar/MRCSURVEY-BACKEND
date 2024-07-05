@@ -5,7 +5,7 @@ spring:
     vault:
       uri: https://my-vault-app-f93d58bccb0a.herokuapp.com
       authentication: token
-      token: hvs.CAESIFETfC5VuFRepCmt-oTPvlmQiUhkVJMbsMVvtLSZdFZvGh4KHGh2cy5ucGZONENCQWJUOHRXTzBON21qaGFWS2o
+      token: hvs.IGW1rYFQjCvFTCh2atUVr7BC
       kv:
         enabled: true
         backend: mysql
