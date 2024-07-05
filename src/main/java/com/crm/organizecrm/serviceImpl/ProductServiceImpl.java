@@ -1,6 +1,9 @@
 package com.crm.organizecrm.serviceImpl;
 
+import com.crm.organizecrm.dto.ProductDTO;
 import com.crm.organizecrm.exception.ProductNotFoundException;
+import com.crm.organizecrm.mapper.DepartmentMapper;
+import com.crm.organizecrm.mapper.ProductMapper;
 import com.crm.organizecrm.model.Company;
 import com.crm.organizecrm.model.Department;
 import com.crm.organizecrm.model.Product;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,25 +28,27 @@ public class ProductServiceImpl implements ProductService {
     private final DepartmentServiceImpl departmentService;
     @Value("${base.url}")
     private String baseUrl;
+
     @Override
-    public Product createProduct(Product product) {
-        Department department = departmentService.getDepartmentById(product.getDepartment().getId());
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        Product product = ProductMapper.toEntity(productDTO);
+        Department department = DepartmentMapper.toEntity(departmentService.getDepartmentById(productDTO.getDepartmentId()));
         product.setDepartment(department);
-        System.out.println(product.getDepartment().getDepartmentName());
         Product savedProduct = productRepository.save(product);
-        System.out.println(savedProduct.getDepartment().getDepartmentName());
         savedProduct.setQrCode(generateQRCodeForProduct(savedProduct));
-        return productRepository.save(savedProduct);
+        return ProductMapper.toDTO(productRepository.save(savedProduct));
     }
 
     @Override
-    public Product updateProduct(Long id, Product product) {
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
-        existingProduct.setProductName(product.getProductName());
-        existingProduct.setQuantity(product.getQuantity());
-        existingProduct.setDepartment(product.getDepartment());
-        return productRepository.save(existingProduct);
+        existingProduct.setProductName(productDTO.getProductName());
+        existingProduct.setQuantity(productDTO.getQuantity());
+        existingProduct.setQrCode(productDTO.getQrCode());
+        Department department = DepartmentMapper.toEntity(departmentService.getDepartmentById(productDTO.getDepartmentId()));
+        existingProduct.setDepartment(department);
+        return ProductMapper.toDTO(productRepository.save(existingProduct));
     }
 
     private String generateQRCodeForProduct(Product product) {
@@ -52,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
 
             String productUrl = baseUrl + "/products/" + product.getId();
 
-            return qrCodeService.generateQRCodeWithLogoBase64(productUrl,company.getName(), 200, 200, companyLogo);
+            return qrCodeService.generateQRCodeWithLogoBase64(productUrl, company.getName(), 200, 200, companyLogo);
         } catch (WriterException | IOException e) {
             throw new RuntimeException("Failed to generate QR code", e);
         }
@@ -66,13 +72,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById(Long id) {
+    public ProductDTO getProductById(Long id) {
         return productRepository.findById(id)
+                .map(ProductMapper::toDTO)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts() {
+        return productRepository.findAll().stream()
+                .map(ProductMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
