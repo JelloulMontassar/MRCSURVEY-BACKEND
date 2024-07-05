@@ -1,11 +1,9 @@
 package com.crm.organizecrm.config;
 
-import com.crm.organizecrm.model.User;
-import com.crm.organizecrm.service.UserService;
+import com.crm.organizecrm.dto.UserDTO;
 import com.crm.organizecrm.enumirators.Role;
-import com.crm.organizecrm.config.PasswordEncoder;
+import com.crm.organizecrm.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -26,22 +24,20 @@ public class Initialize implements CommandLineRunner {
     }
 
     private void createAdminUserIfNeeded() {
-        User adminUser = null;
+        UserDTO adminUser = null;
         try {
             adminUser = userService.getUserByEmail("admin@admin.com");
         } catch (Exception e) {
-            // If user not found or any other exception
-            adminUser = new User();
-            adminUser.setFirstName("admin");
-            adminUser.setLastName("admin");
-            adminUser.setEmail("admin@admin.com");
-            adminUser.setPhoneNumber("88888888");
-            adminUser.setPassword(passwordEncoder.encode("admin"));
-            adminUser.setRole(Role.ADMIN);
-            adminUser.setEnabled(true);
+            adminUser = UserDTO.builder()
+                    .firstName("admin")
+                    .lastName("admin")
+                    .email("admin@admin.com")
+                    .phoneNumber("88888888")
+                    .password(passwordEncoder.encode("admin"))
+                    .role(Role.ADMIN)
+                    .enabled(true)
+                    .build();
             userService.createUser(adminUser);
         }
-
-
     }
 }

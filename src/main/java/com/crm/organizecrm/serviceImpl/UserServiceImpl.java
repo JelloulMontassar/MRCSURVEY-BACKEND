@@ -1,27 +1,20 @@
 package com.crm.organizecrm.serviceImpl;
 
-import com.crm.organizecrm.dto.AuthenticationRequest;
-import com.crm.organizecrm.dto.AuthenticationResponse;
-import com.crm.organizecrm.dto.RegisterRequest;
+import com.crm.organizecrm.dto.UserDTO;
+import com.crm.organizecrm.enumirators.Role;
 import com.crm.organizecrm.exception.TokenNotFoundOrIncorrectExeption;
 import com.crm.organizecrm.exception.UserException;
 import com.crm.organizecrm.exception.UserNotFoundException;
+import com.crm.organizecrm.mapper.UserMapper;
 import com.crm.organizecrm.model.User;
 import com.crm.organizecrm.repository.UserRepository;
-import com.crm.organizecrm.service.JwtService;
 import com.crm.organizecrm.service.UserService;
 import com.crm.organizecrm.config.PasswordEncoder;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import com.crm.organizecrm.enumirators.Role;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,29 +22,28 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
 
     @Override
-    public User createUser(User user) {
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = UserMapper.toEntity(userDTO);
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
-        return userRepository.save(user);
+        return UserMapper.toDTO(userRepository.save(user));
     }
 
     @Override
-    public User updateUser(Long id, User user) {
+    public UserDTO updateUser(Long id, UserDTO userDTO) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        existingUser.setUsername(user.getUsername());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setPhoneNumber(user.getPhoneNumber());
-        existingUser.setRole(user.getRole());
-        existingUser.setEnabled(user.isEnabled());
-        existingUser.setProfileImage(user.getProfileImage());
-        return userRepository.save(existingUser);
+        existingUser.setUsername(userDTO.getUsername());
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(userDTO.getPassword()));
+        existingUser.setFirstName(userDTO.getFirstName());
+        existingUser.setLastName(userDTO.getLastName());
+        existingUser.setPhoneNumber(userDTO.getPhoneNumber());
+        existingUser.setRole(userDTO.getRole());
+        existingUser.setEnabled(userDTO.isEnabled());
+        existingUser.setProfileImage(userDTO.getProfileImage());
+        return UserMapper.toDTO(userRepository.save(existingUser));
     }
 
     @Override
@@ -62,26 +54,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    public UserDTO getUserById(Long id) {
+        return UserMapper.toDTO(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id)));
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+    public UserDTO getUserByUsername(String username) {
+        return UserMapper.toDTO(userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username)));
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+    public UserDTO getUserByEmail(String email) {
+        return UserMapper.toDTO(userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email)));
     }
 
     @Override
@@ -93,49 +87,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User loadUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + username));
+    public UserDTO loadUserByUsername(String username) {
+        return UserMapper.toDTO(userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username)));
     }
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
-        } catch (AuthenticationException e) {
-            System.out.println(e.getMessage());
-            throw new UserException(e.getMessage());
-        }
-        var user = userRepository.getUserByEmail(request.getEmail());
-        Map<String, String> map = new HashMap<>();
-        map.put("role", user.getRole().name());
-        var jwtToken = jwtService.genToken(user, map);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .role(user.getRole())
-                .email(user.getEmail())
-                .messageResponse("You have been successfully authenticated!")
-                .build();
-    }
-    @Transactional
-    public void registerAccount(RegisterRequest request, Role role) {
-        boolean userExists = userRepository.findByEmail(request.getEmail()).isPresent();
+
+    @Override
+    public void registerAccount(UserDTO userDTO, Role role) {
+        boolean userExists = userRepository.findByEmail(userDTO.getEmail()).isPresent();
         if (userExists) {
             throw new UserException("A user already exists with the same email");
         }
-        var user = User.builder()
-                .username(request.getUsername())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .phoneNumber(request.getPhoneNumber())
-                .password(passwordEncoder.bCryptPasswordEncoder().encode(request.getPassword()))
-                .role(role)
-                .enabled(false)
-                .build();
+        User user = UserMapper.toEntity(userDTO);
+        user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(userDTO.getPassword()));
+        user.setRole(role);
+        user.setEnabled(false);
         userRepository.save(user);
     }
 }
