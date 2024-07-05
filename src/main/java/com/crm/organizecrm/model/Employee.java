@@ -27,7 +27,7 @@ public class Employee {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
