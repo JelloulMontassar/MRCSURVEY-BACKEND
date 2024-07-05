@@ -26,6 +26,9 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
         existingProduct.setProductName(product.getProductName());
         existingProduct.setQuantity(product.getQuantity());
+        existingProduct.setDepartment(product.getDepartment());
+        existingProduct.setCompany(product.getCompany());
+        existingProduct.setResponsibleEmployee(product.getResponsibleEmployee());
         return productRepository.save(existingProduct);
     }
 

@@ -5,7 +5,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
+/*
+ *
+ *
+ *
+ *
+ *
+ *              LOOK INTO THIS!
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 @Getter
 @Setter
 @Entity
@@ -24,8 +37,5 @@ public class Customer {
 
     @Enumerated(EnumType.STRING)
     private Status status ;
-
-    @ManyToMany(mappedBy = "customerList")
-    private List<User> usersList ;
 }
 */

@@ -43,6 +43,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "hrUser")
     private List<Subscription> subscriptions;
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
