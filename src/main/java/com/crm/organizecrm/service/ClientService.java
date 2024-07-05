@@ -1,14 +1,14 @@
 package com.crm.organizecrm.service;
 
-import com.crm.organizecrm.model.Client;
+import com.crm.organizecrm.dto.ClientDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ClientService {
-    Client createClient(Client client);
-    Client updateClient(Long id, Client client);
+    ClientDTO createClient(ClientDTO clientDTO);
+    ClientDTO updateClient(Long id, ClientDTO clientDTO);
     void deleteClient(Long id);
-    Optional<Client> getClientById(Long id);
-    List<Client> getAllClients();
+    Optional<ClientDTO> getClientById(Long id);
+    List<ClientDTO> getAllClients();
 }
