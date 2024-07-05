@@ -26,7 +26,7 @@ jobs:
 
     - name: Decrypt secrets
       env:
-        GPG_PASSPHRASE: 376e43kawirm6x8x1hnihkbetpsejp
+        GPG_PASSPHRASE: "376e43kawirm6x8x1hnihkbetpsejp"
       run: |
         gpg --batch --passphrase "$GPG_PASSPHRASE" --decrypt --output secrets.txt secrets.txt.gpg
         source secrets.txt
