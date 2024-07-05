@@ -1,5 +1,6 @@
 package com.crm.organizecrm.controller;
 
+import com.crm.organizecrm.exception.ProductNotFoundException;
 import com.crm.organizecrm.model.Product;
 import com.crm.organizecrm.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,13 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
+    }
+    @GetMapping("/scan/{qrCode}")
+    public ResponseEntity<Product> getProductByQRCode(@PathVariable String qrCode) {
+        Product product = productService.getAllProducts().stream()
+                .filter(p -> p.getQrCode().equals(qrCode))
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with QR code: " + qrCode));
+        return ResponseEntity.ok(product);
     }
 }
