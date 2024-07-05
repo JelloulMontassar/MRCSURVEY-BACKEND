@@ -28,8 +28,10 @@ public class Employee {
     private Company company;
 */
 
+
     @OneToMany
     private List<Client> clients ;
+
 
     @OneToOne
     @JoinColumn(name = "user_id")
