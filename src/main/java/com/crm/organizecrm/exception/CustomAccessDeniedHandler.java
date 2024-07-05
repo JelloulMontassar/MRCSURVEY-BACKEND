@@ -11,9 +11,14 @@ import java.io.IOException;
 
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
-
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied!");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+        String jsonResponse = String.format(
+                "{\"error\": \"Access denied - You do not have the necessary permissions.\", \"message\": \"%s\"}",
+                accessDeniedException.getMessage()
+        );
+        response.getWriter().write(jsonResponse);
     }
 }

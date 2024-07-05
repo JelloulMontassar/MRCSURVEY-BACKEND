@@ -1,4 +1,4 @@
-package com.crm.organizecrm;
+package com.crm.organizecrm.config;
 
 import com.crm.organizecrm.model.User;
 import com.crm.organizecrm.service.UserService;

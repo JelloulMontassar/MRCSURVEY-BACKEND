@@ -11,9 +11,15 @@ import java.io.IOException;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized!");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        String jsonResponse = String.format(
+                "{\"error\": \"Unauthorized access - Invalid token.\", \"message\": \"%s\"}",
+                authException.getMessage()
+        );
+        response.getWriter().write(jsonResponse);
+
     }
 }

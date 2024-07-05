@@ -1,72 +1,54 @@
 package com.crm.organizecrm.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-
-import com.crm.organizecrm.service.JwtService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.multipart.MultipartFile;
-import com.crm.organizecrm.dto.AuthenticationRequest;
+import com.crm.organizecrm.dto.RegisterRequest;
+import com.crm.organizecrm.dto.RegisterResponse;
 import com.crm.organizecrm.model.User;
-import com.crm.organizecrm.service.UserService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.crm.organizecrm.serviceImpl.UserServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import com.crm.organizecrm.enumirators.Role;
+import java.io.IOException;
+import java.util.List;
+import com.crm.organizecrm.exception.UserException;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "*")
 @Slf4j
 public class UserController {
-
     @Autowired
-    private JwtService jwtUtil;
-    private final UserService userService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    public UserController(UserService userService) {
+    private final UserServiceImpl userService;
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
-    @PostMapping("/authenticate")
-    public String generateToken(@RequestBody AuthenticationRequest authRequest) throws Exception {
+    @PostMapping("/create-hr")
+    public ResponseEntity<RegisterResponse> registerHR(@RequestBody RegisterRequest registerRequest) {
+        RegisterResponse registerResponse  = new RegisterResponse();
         try {
-            log.info("username :{} password : {}",authRequest.getEmail(),authRequest.getPassword());
-
-            Authentication authentication =authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
-            );
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            //fixed token generation (error was application.properties missing jwt.secret value)
-            String token = jwtUtil.genToken(userDetails, new HashMap<>());
-
-            return token ;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new Exception("inavalid username/password");
-
+            userService.registerAccount(registerRequest, Role.HR);
+            registerResponse.setEmailResponse(registerRequest.getEmail());
+            registerResponse.setMessageResponse("Account Created");
+            return ResponseEntity.status(HttpStatus.CREATED).body(registerResponse);
+        }catch (UserException e) {
+            registerResponse.setMessageResponse(e.getMessage());
+            registerResponse.setEmailResponse(registerRequest.getEmail());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(registerResponse);
+        } catch (Exception e) {
+            registerResponse.setMessageResponse(e.getMessage());
+            registerResponse.setEmailResponse(registerRequest.getEmail());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(registerResponse);
         }
-
-
-
     }
-
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
@@ -76,28 +58,18 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
-
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
-
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUserByUsername(username));
     }
-
     @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestParam long token, @RequestParam String newPassword) {
-        userService.resetPassword(token, newPassword);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/profile/image")
     public ResponseEntity<Void> uploadImage(@RequestParam MultipartFile file, Authentication authentication) throws IOException {
         User user = userService.getUserByEmail(authentication.getName());

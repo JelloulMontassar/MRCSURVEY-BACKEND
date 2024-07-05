@@ -22,6 +22,13 @@ public class Product {
     private String productName ;
     private String quantity ;
 
-    @OneToMany
-    private List<Category> categories ;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+    @ManyToOne
+    @JoinColumn(name = "responsible_employee_id")
+    private Employee responsibleEmployee;
 }

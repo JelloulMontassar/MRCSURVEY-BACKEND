@@ -33,7 +33,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(false);
-        config.addAllowedOrigin("http://localhost:4200"); // Only this origin
+        config.addAllowedOrigin("*"); // Only this origin
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
@@ -47,8 +47,10 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/user/Register", "/user/authenticate", "/user/ConfirmAccount/**", "/user/forgot-password/**","/user/**").permitAll()
+                        req
+                                .requestMatchers("/user/authenticate", "/user/ConfirmAccount/**", "/user/forgot-password/**","/actuator/**").permitAll()
                                 .requestMatchers("/config/disableAccount/**", "/config/enableAccount/**", "/config/registerAdmin", "/config/getAllUsers").hasAnyRole("ADMIN")
+                                .requestMatchers("/user/create-hr").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -62,7 +64,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/teachers/deleteTeacher/27")
+        registry.addMapping("*")
                 .allowedOrigins("*")
                 .allowCredentials(false);
     }

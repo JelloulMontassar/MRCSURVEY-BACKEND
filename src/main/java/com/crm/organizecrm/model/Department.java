@@ -22,9 +22,13 @@ public class Department {
     private String departmentName ;
     private String departmentDescription ;
 
-    @OneToMany
-    private List<Product> productList ;
+    @OneToMany(mappedBy = "department")
+    private List<Product> products;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    private List<User> usersList ;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @OneToMany(mappedBy = "department")
+    private List<Employee> employees;
 }

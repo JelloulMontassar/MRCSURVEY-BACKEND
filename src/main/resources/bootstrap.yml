@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: database
+  cloud:
+    vault:
+      uri: https://my-vault-app-f93d58bccb0a.herokuapp.com
+      authentication: token
+      token: hvs.CAESIFETfC5VuFRepCmt-oTPvlmQiUhkVJMbsMVvtLSZdFZvGh4KHGh2cy5ucGZONENCQWJUOHRXTzBON21qaGFWS2o
+      kv:
+        enabled: true
+        backend: mysql
+        default-context: database
+  config:
+    import: vault://
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+    beans:
+      enabled: true
