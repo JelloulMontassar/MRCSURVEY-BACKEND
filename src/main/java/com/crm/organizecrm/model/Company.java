@@ -17,7 +17,9 @@ public class Company {
     private Long id;
 
     private String name;
-
+    @Lob
+    @Column(columnDefinition = "BLOB")
+    private byte[] logo;
    /* @OneToOne
     @JoinColumn(name = "subscription_id")
     private Subscription subscription;*/

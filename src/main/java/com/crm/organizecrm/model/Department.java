@@ -32,8 +32,8 @@ public class Department {
     @OneToMany
     private List<Employee> employees;
 
-  /*  @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "company_id")
-    private Company company;*/
+    private Company company;
 
 }
