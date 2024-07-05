@@ -36,7 +36,7 @@ public class Company {
     private List<Contact> contacts;
 
     @OneToMany(mappedBy = "company")
-    private List<Customer> clients;
+    private List<Client> client;
 
     @OneToMany(mappedBy = "company")
     private List<Product> products;

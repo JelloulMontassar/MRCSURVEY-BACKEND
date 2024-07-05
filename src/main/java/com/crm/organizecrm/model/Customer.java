@@ -1,3 +1,4 @@
+/*
 package com.crm.organizecrm.model;
 import com.crm.organizecrm.enumirators.Status;
 import jakarta.persistence.*;
@@ -27,3 +28,4 @@ public class Customer {
     @ManyToMany(mappedBy = "customerList")
     private List<User> usersList ;
 }
+*/
