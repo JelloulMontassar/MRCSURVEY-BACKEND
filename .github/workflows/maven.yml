@@ -50,9 +50,12 @@ jobs:
         VAULT_TOKEN="${{ env.SPRING_CLOUD_VAULT_TOKEN }}"
 
         # Fetch the secrets from Vault
-        DB_URL=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_URL/v1/mysql/data/database | jq -r .data.data.host)
-        DB_USERNAME=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_URL/v1/mysql/data/database | jq -r .data.data.username)
-        DB_PASSWORD=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_URL/v1/mysql/data/database | jq -r .data.data.password)
+        VAULT_RESPONSE=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_URL/v1/mysql/data/database)
+        echo "Vault Response: $VAULT_RESPONSE"
+        
+        DB_URL=$(echo $VAULT_RESPONSE | jq -r .data.data.host)
+        DB_USERNAME=$(echo $VAULT_RESPONSE | jq -r .data.data.username)
+        DB_PASSWORD=$(echo $VAULT_RESPONSE | jq -r .data.data.password)
 
         echo "DB_URL=$DB_URL" >> $GITHUB_ENV
         echo "DB_USERNAME=$DB_USERNAME" >> $GITHUB_ENV
