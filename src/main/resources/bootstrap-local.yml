@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    vault:
+      uri: https://my-vault-app-f93d58bccb0a.herokuapp.com
+      authentication: token
+      token: hvs.CAESIH_7Pz78iq5WeFKFPVdKkwznjB2MCpAdiMHRtQQvBgX2Gh4KHGh2cy5iUndjWVROYjh1Z05MYkVoT2xQWlFIVUo
+      kv:
+        enabled: true
+        backend: mysql
+        default-context: database
+base:
+  url: http://localhost:8089
