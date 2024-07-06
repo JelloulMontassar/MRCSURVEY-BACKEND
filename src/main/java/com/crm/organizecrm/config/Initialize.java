@@ -33,7 +33,7 @@ public class Initialize implements CommandLineRunner {
                     .lastName("admin")
                     .email("admin@admin.com")
                     .phoneNumber("88888888")
-                    .password(passwordEncoder.encode("admin"))
+                    .password(passwordEncoder.encode("admin123"))
                     .role(Role.ADMIN)
                     .enabled(true)
                     .build();
