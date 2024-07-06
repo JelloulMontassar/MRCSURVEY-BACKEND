@@ -8,6 +8,7 @@ spring:
         enabled: true
         backend: mysql
         default-context: database
+      application-name: database
   datasource:
     url: jdbc:mysql://${host}:${port}/${database}
     username: ${username}
