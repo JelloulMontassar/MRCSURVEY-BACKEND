@@ -54,7 +54,7 @@ jobs:
         echo "VAULT_TOKEN=$VAULT_TOKEN"
 
         # Fetch the secrets from Vault and capture the HTTP status code
-        HTTP_STATUS=$(curl -s -o vault_response.json -w "%{http_code}" --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_URL/v1/mysql/data/database)
+        HTTP_STATUS=$(curl -s -o vault_response.json -w "%{http_code}" --header X-Vault-Token: $VAULT_TOKEN $VAULT_URL/v1/mysql/data/database)
         echo "HTTP Status: $HTTP_STATUS"
         cat vault_response.json
         VAULT_RESPONSE=$(cat vault_response.json)
