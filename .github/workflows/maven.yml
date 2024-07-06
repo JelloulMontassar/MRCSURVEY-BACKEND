@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -20,40 +21,48 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Import Secrets from Vault
-        id: import-secrets
-        uses: hashicorp/vault-action@v1
-        with:
-          url: https://my-vault-app-f93d58bccb0a.herokuapp.com
-          token: hvs.CAESIH_7Pz78iq5WeFKFPVdKkwznjB2MCpAdiMHRtQQvBgX2Gh4KHGh2cy5iUndjWVROYjh1Z05MYkVoT2xQWlFIVUo
-          secrets: |
-            secret/data/mysql/database host | DB_HOST ;
-            secret/data/mysql/database jwt_secret | JWT_SECRET ;
-            secret/data/mysql/database password | DB_PASSWORD ;
-            secret/data/mysql/database port | DB_PORT ;
-            secret/data/mysql/database username | DB_USERNAME
+      - name: Install jq
+        run: sudo apt-get install -y jq
 
-      - name: Validate URI
+      - name: Fetch secrets from Vault
+        id: fetch-secrets
         run: |
-          echo "Validating URI..."
-          if [[ ! "https://my-vault-app-f93d58bccb0a.herokuapp.com" =~ ^https:// ]]; then
-            echo "Invalid URI: https://my-vault-app-f93d58bccb0a.herokuapp.com"
+          VAULT_URL="https://my-vault-app-f93d58bccb0a.herokuapp.com"
+          VAULT_TOKEN="hvs.CAESIH_7Pz78iq5WeFKFPVdKkwznjB2MCpAdiMHRtQQvBgX2Gh4KHGh2cy5iUndjWVROYjh1Z05MYkVoT2xQWlFIVUo"
+          
+          # Print environment variables for debugging
+          echo "VAULT_URL=$VAULT_URL"
+          echo "VAULT_TOKEN=$VAULT_TOKEN"
+          
+          # Fetch the secrets from Vault and capture the HTTP status code
+          HTTP_STATUS=$(curl -s -o vault_response.json -w "%{http_code}" --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_URL/v1/mysql/data/database)
+          echo "HTTP Status: $HTTP_STATUS"
+          cat vault_response.json
+          VAULT_RESPONSE=$(cat vault_response.json)
+          
+          if [[ "$HTTP_STATUS" -ne 200 ]]; then
+            echo "Failed to fetch secrets from Vault. HTTP Status: $HTTP_STATUS"
             exit 1
           fi
-
-      - name: Print and Validate Fetched Secrets
-        run: |
-          echo "Validating fetched secrets..."
-          echo "DB_HOST=${{ env.DB_HOST }}"
-          echo "JWT_SECRET=${{ env.JWT_SECRET }}"
-          echo "DB_PASSWORD=${{ env.DB_PASSWORD }}"
-          echo "DB_PORT=${{ env.DB_PORT }}"
-          echo "DB_USERNAME=${{ env.DB_USERNAME }}"
-
-          if [[ -z "${{ env.DB_HOST }}" || -z "${{ env.JWT_SECRET }}" || -z "${{ env.DB_PASSWORD }}" || -z "${{ env.DB_PORT }}" || -z "${{ env.DB_USERNAME }}" ]]; then
-            echo "One or more secrets are missing. Validation failed."
+          
+          # Print and parse the response
+          echo "Vault Response: $VAULT_RESPONSE"
+          DB_HOST=$(echo $VAULT_RESPONSE | jq -r .data.data.host)
+          JWT_SECRET=$(echo $VAULT_RESPONSE | jq -r .data.data.jwt_secret)
+          DB_PASSWORD=$(echo $VAULT_RESPONSE | jq -r .data.data.password)
+          DB_PORT=$(echo $VAULT_RESPONSE | jq -r .data.data.port)
+          DB_USERNAME=$(echo $VAULT_RESPONSE | jq -r .data.data.username)
+          
+          if [[ -z "$DB_HOST" || -z "$JWT_SECRET" || -z "$DB_PASSWORD" || -z "$DB_PORT" || -z "$DB_USERNAME" ]]; then
+            echo "Failed to parse Vault response."
             exit 1
           fi
+          
+          echo "DB_HOST=$DB_HOST" >> $GITHUB_ENV
+          echo "JWT_SECRET=$JWT_SECRET" >> $GITHUB_ENV
+          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
+          echo "DB_PORT=$DB_PORT" >> $GITHUB_ENV
+          echo "DB_USERNAME=$DB_USERNAME" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
