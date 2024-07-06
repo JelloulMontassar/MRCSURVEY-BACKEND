@@ -82,7 +82,7 @@ jobs:
           fi
 
       - name: Run Maven tests
-        run: mvn test
+        run: mvn test -Dspring.jpa.show-sql=true -Dspring.jpa.properties.hibernate.format_sql=true -Dlogging.level.org.hibernate.SQL=DEBUG -Dlogging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
         env:
           SPRING_PROFILES_ACTIVE: ci
           SPRING_CLOUD_VAULT_URI: ${{ env.SPRING_CLOUD_VAULT_URI }}
