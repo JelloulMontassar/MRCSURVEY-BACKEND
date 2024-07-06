@@ -1,7 +1,7 @@
 package com.crm.organizecrm.serviceImpl;
 
 import com.crm.organizecrm.dto.EmployeeDTO;
-import com.crm.organizecrm.exception.UserNotFoundException;
+import com.crm.organizecrm.exception.EmployeeNotFoundException;
 import com.crm.organizecrm.mapper.EmployeeMapper;
 import com.crm.organizecrm.model.Employee;
 import com.crm.organizecrm.repository.EmployeeRepository;
@@ -27,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
         Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("Employee not found with id: " + id));
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
         existingEmployee.setName(employeeDTO.getName());
         existingEmployee.setEmail(employeeDTO.getEmail());
         return EmployeeMapper.toDTO(employeeRepository.save(existingEmployee));
@@ -36,7 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(Long id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("Employee not found with id: " + id));
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
         employeeRepository.delete(employee);
     }
 
@@ -44,7 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDTO getEmployeeById(Long id) {
         return employeeRepository.findById(id)
                 .map(EmployeeMapper::toDTO)
-                .orElseThrow(() -> new UserNotFoundException("Employee not found with id: " + id));
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
     }
 
     @Override

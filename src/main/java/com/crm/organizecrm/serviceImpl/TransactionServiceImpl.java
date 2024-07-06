@@ -1,7 +1,7 @@
 package com.crm.organizecrm.serviceImpl;
 
 import com.crm.organizecrm.dto.TransactionDTO;
-import com.crm.organizecrm.exception.ResourceNotFoundException;
+import com.crm.organizecrm.exception.TransactionException;
 import com.crm.organizecrm.mapper.TransactionMapper;
 import com.crm.organizecrm.model.Transaction;
 import com.crm.organizecrm.repository.TransactionRepository;
@@ -28,7 +28,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDTO updateTransaction(Long id, TransactionDTO transactionDTO) {
         Transaction existingTransaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + id));
+                .orElseThrow(() -> new TransactionException("Transaction not found with id: " + id));
         existingTransaction.setAmount(transactionDTO.getAmount());
         existingTransaction.setDate(transactionDTO.getDate());
         return TransactionMapper.toDTO(transactionRepository.save(existingTransaction));
@@ -37,7 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void deleteTransaction(Long id) {
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + id));
+                .orElseThrow(() -> new TransactionException("Transaction not found with id: " + id));
         transactionRepository.delete(transaction);
     }
 

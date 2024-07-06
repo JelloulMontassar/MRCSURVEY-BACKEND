@@ -1,7 +1,7 @@
 package com.crm.organizecrm.serviceImpl;
 
 import com.crm.organizecrm.dto.ClientDTO;
-import com.crm.organizecrm.exception.ResourceNotFoundException;
+import com.crm.organizecrm.exception.ClientNotFoundException;
 import com.crm.organizecrm.mapper.ClientMapper;
 import com.crm.organizecrm.model.Client;
 import com.crm.organizecrm.repository.ClientRepository;
@@ -28,7 +28,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDTO updateClient(Long id, ClientDTO clientDTO) {
         Client existingClient = clientRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + id));
         existingClient.setName(clientDTO.getName());
         existingClient.setEmail(clientDTO.getEmail());
         existingClient.setPhone(clientDTO.getPhone());
@@ -38,7 +38,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void deleteClient(Long id) {
         Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + id));
         clientRepository.delete(client);
     }
 

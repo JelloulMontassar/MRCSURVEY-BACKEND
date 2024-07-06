@@ -1,7 +1,7 @@
 package com.crm.organizecrm.serviceImpl;
 
 import com.crm.organizecrm.dto.CompanyDTO;
-import com.crm.organizecrm.exception.ResourceNotFoundException;
+import com.crm.organizecrm.exception.CompanyNotFoundException;
 import com.crm.organizecrm.mapper.CompanyMapper;
 import com.crm.organizecrm.model.Company;
 import com.crm.organizecrm.repository.CompanyRepository;
@@ -28,7 +28,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDTO updateCompany(Long id, CompanyDTO companyDTO) {
         Company existingCompany = companyRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Company not found with id: " + id));
+                .orElseThrow(() -> new CompanyNotFoundException("Company not found with id: " + id));
         existingCompany.setName(companyDTO.getName());
         existingCompany.setLogo(companyDTO.getLogo());
         return CompanyMapper.toDTO(companyRepository.save(existingCompany));
@@ -37,7 +37,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void deleteCompany(Long id) {
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Company not found with id: " + id));
+                .orElseThrow(() -> new CompanyNotFoundException("Company not found with id: " + id));
         companyRepository.delete(company);
     }
 

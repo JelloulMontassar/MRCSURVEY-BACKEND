@@ -1,7 +1,7 @@
 package com.crm.organizecrm.serviceImpl;
 
 import com.crm.organizecrm.dto.ContactDTO;
-import com.crm.organizecrm.exception.ResourceNotFoundException;
+import com.crm.organizecrm.exception.ContactNotFoundException;
 import com.crm.organizecrm.mapper.ContactMapper;
 import com.crm.organizecrm.model.Contact;
 import com.crm.organizecrm.repository.ContactRepository;
@@ -28,7 +28,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO updateContact(Long id, ContactDTO contactDTO) {
         Contact existingContact = contactRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + id));
+                .orElseThrow(() -> new ContactNotFoundException("Contact not found with id: " + id));
         existingContact.setName(contactDTO.getName());
         existingContact.setEmail(contactDTO.getEmail());
         existingContact.setPhone(contactDTO.getPhone());
@@ -38,7 +38,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public void deleteContact(Long id) {
         Contact contact = contactRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + id));
+                .orElseThrow(() -> new ContactNotFoundException("Contact not found with id: " + id));
         contactRepository.delete(contact);
     }
 

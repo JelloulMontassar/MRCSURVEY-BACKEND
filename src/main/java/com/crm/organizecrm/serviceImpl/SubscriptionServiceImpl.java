@@ -1,7 +1,7 @@
 package com.crm.organizecrm.serviceImpl;
 
 import com.crm.organizecrm.dto.SubscriptionDTO;
-import com.crm.organizecrm.exception.ResourceNotFoundException;
+import com.crm.organizecrm.exception.SubscriptionNotFoundException;
 import com.crm.organizecrm.mapper.SubscriptionMapper;
 import com.crm.organizecrm.model.Subscription;
 import com.crm.organizecrm.repository.SubscriptionRepository;
@@ -28,7 +28,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public SubscriptionDTO updateSubscription(Long id, SubscriptionDTO subscriptionDTO) {
         Subscription existingSubscription = subscriptionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subscription not found with id: " + id));
+                .orElseThrow(() -> new SubscriptionNotFoundException("Subscription not found with id: " + id));
         existingSubscription.setPlanName(subscriptionDTO.getPlanName());
         existingSubscription.setFeatures(subscriptionDTO.getFeatures());
         existingSubscription.setPrice(subscriptionDTO.getPrice());
@@ -39,7 +39,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public void deleteSubscription(Long id) {
         Subscription subscription = subscriptionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subscription not found with id: " + id));
+                .orElseThrow(() -> new SubscriptionNotFoundException("Subscription not found with id: " + id));
         subscriptionRepository.delete(subscription);
     }
 
