@@ -10,7 +10,7 @@ spring:
         default-context: database
       application-name: database
   datasource:
-    url: jdbc:mysql://sql.freedb.tech:3306/freedb_organizecrm
+    url: jdbc:mysql://sql.freedb.tech:3306/freedb_organizecrm?useCompression=true&useSSL=true
     username: freedb_organizecrm
     password: ?e5t8?QNB$aN!DG
     driver-class-name: com.mysql.cj.jdbc.Driver
