@@ -28,7 +28,7 @@ jobs:
         id: import-secrets
         uses: hashicorp/vault-action@v2
         with:
-          url: https://my-vault-app-f93d58bccb0a.herokuapp.com
+          url: my-vault-app-f93d58bccb0a.herokuapp.com
           token: "hvs.CAESIH_7Pz78iq5WeFKFPVdKkwznjB2MCpAdiMHRtQQvBgX2Gh4KHGh2cy5iUndjWVROYjh1Z05MYkVoT2xQWlFIVUo"
           secrets: |
             env/cd/SPRING_CLOUD_VAULT_URI | SPRING_CLOUD_VAULT_URI ;
