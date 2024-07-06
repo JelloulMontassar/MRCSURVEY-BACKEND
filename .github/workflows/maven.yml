@@ -16,8 +16,8 @@ jobs:
         env:
           MYSQL_DATABASE: un0gn58m9mjrc2vw
           MYSQL_USER: rks2o6t3e2zyd131
-          MYSQL_ROOT_PASSWORD: iggw8tiy1vlwu3ss
           MYSQL_PASSWORD: iggw8tiy1vlwu3ss
+          MYSQL_ROOT_PASSWORD: pw
         options: >-
           --health-cmd "mysqladmin ping --silent"
           --health-interval 10s
@@ -38,7 +38,7 @@ jobs:
 
       - name: Wait for MySQL to be ready
         run: |
-          while ! mysqladmin ping -h"i943okdfa47xqzpy.cbetxkdyhwsb.us-east-1.rds.amazonaws.com" --silent; do
+          while ! mysqladmin ping -h"127.0.0.1" --silent; do
             echo "Waiting for MySQL to be ready..."
             sleep 2
           done
@@ -50,11 +50,10 @@ jobs:
           echo "SPRING_CLOUD_VAULT_TOKEN=hvs.CAESIH_7Pz78iq5WeFKFPVdKkwznjB2MCpAdiMHRtQQvBgX2Gh4KHGh2cy5iUndjWVROYjh1Z05MYkVoT2xQWlFIVUo" >> $GITHUB_ENV
 
           # MySQL connection details
-          echo "DB_HOST=i943okdfa47xqzpy.cbetxkdyhwsb.us-east-1.rds.amazonaws.com" >> $GITHUB_ENV
+          echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
           echo "DB_PORT=3306" >> $GITHUB_ENV
           echo "DB_NAME=un0gn58m9mjrc2vw" >> $GITHUB_ENV
           echo "DB_USERNAME=rks2o6t3e2zyd131" >> $GITHUB_ENV
-          echo "MYSQL_ROOT_PASSWORD=iggw8tiy1vlwu3ss" >> $GITHUB_ENV
           echo "DB_PASSWORD=iggw8tiy1vlwu3ss" >> $GITHUB_ENV
 
       - name: Run Maven tests
@@ -67,9 +66,7 @@ jobs:
           DB_PORT: ${{ env.DB_PORT }}
           DB_NAME: ${{ env.DB_NAME }}
           DB_USERNAME: ${{ env.DB_USERNAME }}
-          MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
           DB_PASSWORD: ${{ env.DB_PASSWORD }}
-
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
@@ -81,9 +78,7 @@ jobs:
           DB_PORT: ${{ env.DB_PORT }}
           DB_NAME: ${{ env.DB_NAME }}
           DB_USERNAME: ${{ env.DB_USERNAME }}
-          MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
           DB_PASSWORD: ${{ env.DB_PASSWORD }}
-
 
       # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
       - name: Update dependency graph
