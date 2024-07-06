@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class OrganizeCrmApplicationTests {
 
-	@Value("${spring.cloud.config.uri}")
+	@Value("${spring.datasource.url}")
 	private String url;
 
 	@Value("${spring.datasource.username}")
