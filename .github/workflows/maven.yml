@@ -31,11 +31,11 @@ jobs:
           url: https://my-vault-app-f93d58bccb0a.herokuapp.com
           token: hvs.CAESIH_7Pz78iq5WeFKFPVdKkwznjB2MCpAdiMHRtQQvBgX2Gh4KHGh2cy5iUndjWVROYjh1Z05MYkVoT2xQWlFIVUo
           secrets: |
-            v1/mysql/data/database host | DB_HOST ;
-            v1/mysql/data/database jwt_secret | JWT_SECRET ;
-            v1/mysql/data/database password | DB_PASSWORD ;
-            v1/mysql/data/database port | DB_PORT ;
-            v1/mysql/data/database username | DB_USERNAME
+            mysql/database host | DB_HOST ;
+            mysql/database jwt_secret | JWT_SECRET ;
+            mysql/database password | DB_PASSWORD ;
+            mysql/database port | DB_PORT ;
+            mysql/database username | DB_USERNAME
 
       - name: Validate URI
         run: |
