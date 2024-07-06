@@ -19,13 +19,36 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Fetch secrets from Vault
+        id: fetch-secrets
+        run: |
+          VAULT_URL="https://my-vault-app-f93d58bccb0a.herokuapp.com"
+          VAULT_TOKEN="hvs.CAESIALlYZKm-P3ID1ROd-ruCiQ3JVOjdTHv2jzjZEbhSsYjGh4KHGh2cy51cWF2THFpYTRpalgyNmowMzFSYmFPcnI"
+          
+          # Fetch the secrets from Vault
+          VAULT_RESPONSE=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_URL/v1/decrypt/data/database)
+          SECRET_DECRYPT=$(echo $VAULT_RESPONSE | jq -r .data.data.secret)
+          if [ -z "$SECRET_DECRYPT" ]; then
+            echo "Failed to fetch secret from Vault."
+            exit 1
+          fi
+          echo "SECRET_DECRYPT=$SECRET_DECRYPT" >> $GITHUB_ENV
 
+      - name: Install GPG
+        run: sudo apt-get install -y gnupg
 
+      - name: Decrypt secrets
+        env:
+          GPG_PASSPHRASE: ${{ env.SECRET_DECRYPT }}
+        run: |
+          gpg --batch --passphrase "$GPG_PASSPHRASE" --decrypt --output secrets.txt secrets.txt.gpg
+          source secrets.txt
+          echo "SPRING_CLOUD_VAULT_URI=$SPRING_CLOUD_VAULT_URI" >> $GITHUB_ENV
+          echo "SPRING_CLOUD_VAULT_TOKEN=$SPRING_CLOUD_VAULT_TOKEN" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml -Dspring.config.additional-location=file:./src/main/resources/bootstrap-ci.yml
         env:
           SPRING_PROFILES_ACTIVE: ci
-      # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-      #- name: Update dependency graph
-      #  uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+          SPRING_CLOUD_VAULT_URI: ${{ env.SPRING_CLOUD_VAULT_URI }}
+          SPRING_CLOUD_VAULT_TOKEN: ${{ env.SPRING_CLOUD_VAULT_TOKEN }}
