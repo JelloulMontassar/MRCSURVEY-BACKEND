@@ -22,7 +22,7 @@ jobs:
 
       - name: Import Secrets from Vault
         id: import-secrets
-        uses: hashicorp/vault-action@v2
+        uses: hashicorp/vault-action@v1
         with:
           url: https://my-vault-app-f93d58bccb0a.herokuapp.com
           token: hvs.CAESIH_7Pz78iq5WeFKFPVdKkwznjB2MCpAdiMHRtQQvBgX2Gh4KHGh2cy5iUndjWVROYjh1Z05MYkVoT2xQWlFIVUo
