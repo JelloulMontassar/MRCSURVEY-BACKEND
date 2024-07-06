@@ -3,9 +3,12 @@ package com.crm.organizecrm.controller;
 import com.crm.organizecrm.dto.SubscriptionDTO;
 import com.crm.organizecrm.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +21,18 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @PostMapping
-    public ResponseEntity<SubscriptionDTO> createSubscription(@RequestBody SubscriptionDTO subscriptionDTO) {
+    public ResponseEntity<SubscriptionDTO> createSubscription(@Valid @RequestBody SubscriptionDTO subscriptionDTO, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         return ResponseEntity.ok(subscriptionService.createSubscription(subscriptionDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SubscriptionDTO> updateSubscription(@PathVariable Long id, @RequestBody SubscriptionDTO subscriptionDTO) {
+    public ResponseEntity<SubscriptionDTO> updateSubscription(@PathVariable Long id, @Valid @RequestBody SubscriptionDTO subscriptionDTO, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         return ResponseEntity.ok(subscriptionService.updateSubscription(id, subscriptionDTO));
     }
 

@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.validation.BindingResult;
 
+import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -27,8 +29,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create-hr")
-    public ResponseEntity<RegisterResponse> registerHR(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<RegisterResponse> registerHR(@Valid @RequestBody RegisterRequest registerRequest, BindingResult result) {
         RegisterResponse registerResponse = new RegisterResponse();
+        if (result.hasErrors()) {
+            registerResponse.setMessageResponse("Validation failed");
+            registerResponse.setEmailResponse(registerRequest.getEmail());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(registerResponse);
+        }
         try {
             UserDTO userDTO = UserDTO.builder()
                     .username(registerRequest.getUsername())
@@ -55,7 +62,10 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         return ResponseEntity.ok(userService.updateUser(id, userDTO));
     }
 

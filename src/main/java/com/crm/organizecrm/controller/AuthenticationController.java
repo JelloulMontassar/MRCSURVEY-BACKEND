@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -20,7 +23,13 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(AuthenticationResponse.builder()
+                            .messageResponse("Validation failed")
+                            .build());
+        }
         try {
             AuthenticationResponse response = userService.authenticate(request);
             return ResponseEntity.ok(response);
