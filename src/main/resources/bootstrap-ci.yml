@@ -10,9 +10,9 @@ spring:
         default-context: database
       application-name: database
   datasource:
-    url: jdbc:mysql://sql.freedb.tech:3306/freedb_organizecrm?useCompression=true&useSSL=true
-    username: freedb_organizecrm
-    password: ?e5t8?QNB$aN!DG
+    url: jdbc:mysql://mysql-3e23a2db-isamm-f3af.h.aivencloud.com:18050/defaultdb?ssl-mode=REQUIRED
+    username: avnadmin
+    password: AVNS_aBP8PTJCEEtEbPR3oXc
     driver-class-name: com.mysql.cj.jdbc.Driver
 base:
   url: http://localhost:8089
