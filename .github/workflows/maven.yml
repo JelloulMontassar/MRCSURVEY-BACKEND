@@ -17,6 +17,7 @@ jobs:
           MYSQL_DATABASE: un0gn58m9mjrc2vw
           MYSQL_USER: rks2o6t3e2zyd131
           MYSQL_ROOT_PASSWORD: iggw8tiy1vlwu3ss
+          MYSQL_PASSWORD: iggw8tiy1vlwu3ss
         options: >-
           --health-cmd "mysqladmin ping --silent"
           --health-interval 10s
@@ -54,6 +55,7 @@ jobs:
           echo "DB_NAME=un0gn58m9mjrc2vw" >> $GITHUB_ENV
           echo "DB_USERNAME=rks2o6t3e2zyd131" >> $GITHUB_ENV
           echo "MYSQL_ROOT_PASSWORD=iggw8tiy1vlwu3ss" >> $GITHUB_ENV
+          echo "DB_PASSWORD=iggw8tiy1vlwu3ss" >> $GITHUB_ENV
 
       - name: Run Maven tests
         run: mvn test
@@ -66,6 +68,8 @@ jobs:
           DB_NAME: ${{ env.DB_NAME }}
           DB_USERNAME: ${{ env.DB_USERNAME }}
           MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
@@ -78,6 +82,8 @@ jobs:
           DB_NAME: ${{ env.DB_NAME }}
           DB_USERNAME: ${{ env.DB_USERNAME }}
           MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+
 
       # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
       - name: Update dependency graph
