@@ -69,8 +69,6 @@ jobs:
             exit 1
           fi
 
-      - name: Run Maven tests
-        run: mvn test -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/organizecrm -Dspring.datasource.username=test -Dspring.datasource.password=123 -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/organizecrm -Dspring.datasource.username=test -Dspring.datasource.password=123 -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
