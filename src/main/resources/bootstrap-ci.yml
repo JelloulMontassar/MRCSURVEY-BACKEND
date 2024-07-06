@@ -10,9 +10,9 @@ spring:
         default-context: database
       application-name: database
   datasource:
-    url: jdbc:mysql://${host}:${port}/${database}
-    username: ${username}
-    password: ${password}
+    url: jdbc:mysql://${data.host}:${data.port}/${data.database}
+    username: ${data.username}
+    password: ${data.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 base:
   url: http://localhost:8089
