@@ -8,5 +8,11 @@ spring:
         enabled: true
         backend: mysql
         default-context: database
+  datasource:
+    url: jdbc:mysql://${host}:${port}/${database}
+    username: ${username}
+    password: ${password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
 base:
   url: http://localhost:8089
