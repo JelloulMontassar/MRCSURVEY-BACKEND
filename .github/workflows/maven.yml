@@ -72,6 +72,15 @@ jobs:
           echo "DB_USERNAME=test" >> $GITHUB_ENV
           echo "DB_PASSWORD=123" >> $GITHUB_ENV
 
+      - name: Verify MySQL Connection
+        run: |
+          echo "Verifying MySQL connection..."
+          mysql -h 127.0.0.1 -u test -p"123" -e "SHOW DATABASES;"
+          if [ $? -ne 0 ]; then
+            echo "Unable to connect to MySQL with the provided credentials."
+            exit 1
+          fi
+
       - name: Run Maven tests
         run: mvn test
         env:
