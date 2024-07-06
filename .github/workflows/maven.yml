@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,74 +20,49 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Install GPG
-        run: sudo apt-get install -y gnupg
-
-      - name: Decrypt secrets
-        env:
-          GPG_PASSPHRASE: "376e43kawirm6x8x1hnihkbetpsejp"
-        run: |
-          gpg --batch --passphrase "$GPG_PASSPHRASE" --decrypt --output secrets.txt secrets.txt.gpg
-          source secrets.txt
-          SPRING_CLOUD_VAULT_URI=$(echo "$SPRING_CLOUD_VAULT_URI" | tr -d '\n\r' | xargs)
-          SPRING_CLOUD_VAULT_TOKEN=$(echo "$SPRING_CLOUD_VAULT_TOKEN" | tr -d '\n\r' | xargs)
-          echo "SPRING_CLOUD_VAULT_URI=$SPRING_CLOUD_VAULT_URI" >> $GITHUB_ENV
-          echo "SPRING_CLOUD_VAULT_TOKEN=$SPRING_CLOUD_VAULT_TOKEN" >> $GITHUB_ENV
+      - name: Import Secrets from Vault
+        id: import-secrets
+        uses: hashicorp/vault-action@v2
+        with:
+          url: https://my-vault-app-f93d58bccb0a.herokuapp.com
+          token: hvs.CAESIH_7Pz78iq5WeFKFPVdKkwznjB2MCpAdiMHRtQQvBgX2Gh4KHGh2cy5iUndjWVROYjh1Z05MYkVoT2xQWlFIVUo
+          secrets: |
+            secret/data/mysql/database host | DB_HOST ;
+            secret/data/mysql/database jwt_secret | JWT_SECRET ;
+            secret/data/mysql/database password | DB_PASSWORD ;
+            secret/data/mysql/database port | DB_PORT ;
+            secret/data/mysql/database username | DB_USERNAME
 
       - name: Validate URI
         run: |
           echo "Validating URI..."
-          printf '%s\n' "SPRING_CLOUD_VAULT_URI=${{ env.SPRING_CLOUD_VAULT_URI }}" | cat -v
-          printf '%s\n' "SPRING_CLOUD_VAULT_TOKEN=${{ env.SPRING_CLOUD_VAULT_TOKEN }}" | cat -v
-          if [[ ! "${{ env.SPRING_CLOUD_VAULT_URI }}" =~ ^https:// ]]; then
-            echo "Invalid URI: ${{ env.SPRING_CLOUD_VAULT_URI }}"
+          if [[ ! "https://my-vault-app-f93d58bccb0a.herokuapp.com" =~ ^https:// ]]; then
+            echo "Invalid URI: https://my-vault-app-f93d58bccb0a.herokuapp.com"
             exit 1
           fi
 
-      - name: Fetch additional secrets from Vault
-        id: vault
+      - name: Print and Validate Fetched Secrets
         run: |
-          VAULT_URL="${{ env.SPRING_CLOUD_VAULT_URI }}"
-          VAULT_TOKEN="${{ env.SPRING_CLOUD_VAULT_TOKEN }}"
-          
-          # Print environment variables for debugging
-          echo "VAULT_URL=$VAULT_URL"
-          echo "VAULT_TOKEN=$VAULT_TOKEN"
-          
-          # Fetch the secrets from Vault and capture the HTTP status code
-          HTTP_STATUS=$(curl -s -o vault_response.json -w "%{http_code}" --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_URL/v1/mysql/data/database)
-          echo "HTTP Status: $HTTP_STATUS"
-          cat vault_response.json
-          VAULT_RESPONSE=$(cat vault_response.json)
-          
-          if [[ "$HTTP_STATUS" -ne 200 ]]; then
-            echo "Failed to fetch secrets from Vault. HTTP Status: $HTTP_STATUS"
+          echo "Validating fetched secrets..."
+          echo "DB_HOST=${{ env.DB_HOST }}"
+          echo "JWT_SECRET=${{ env.JWT_SECRET }}"
+          echo "DB_PASSWORD=${{ env.DB_PASSWORD }}"
+          echo "DB_PORT=${{ env.DB_PORT }}"
+          echo "DB_USERNAME=${{ env.DB_USERNAME }}"
+
+          if [[ -z "${{ env.DB_HOST }}" || -z "${{ env.JWT_SECRET }}" || -z "${{ env.DB_PASSWORD }}" || -z "${{ env.DB_PORT }}" || -z "${{ env.DB_USERNAME }}" ]]; then
+            echo "One or more secrets are missing. Validation failed."
             exit 1
           fi
-          
-          # Print and parse the response
-          echo "Vault Response: $VAULT_RESPONSE"
-          DB_URL=$(echo $VAULT_RESPONSE | jq -r .data.data.host)
-          DB_USERNAME=$(echo $VAULT_RESPONSE | jq -r .data.data.username)
-          DB_PASSWORD=$(echo $VAULT_RESPONSE | jq -r .data.data.password)
-          
-          if [[ -z "$DB_URL" || -z "$DB_USERNAME" || -z "$DB_PASSWORD" ]]; then
-            echo "Failed to parse Vault response."
-            exit 1
-          fi
-          
-          echo "DB_URL=$DB_URL" >> $GITHUB_ENV
-          echo "DB_USERNAME=$DB_USERNAME" >> $GITHUB_ENV
-          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
         env:
-          SPRING_CLOUD_VAULT_URI: ${{ env.SPRING_CLOUD_VAULT_URI }}
-          SPRING_CLOUD_VAULT_TOKEN: ${{ env.SPRING_CLOUD_VAULT_TOKEN }}
-          DB_URL: ${{ env.DB_URL }}
-          DB_USERNAME: ${{ env.DB_USERNAME }}
+          DB_HOST: ${{ env.DB_HOST }}
+          JWT_SECRET: ${{ env.JWT_SECRET }}
           DB_PASSWORD: ${{ env.DB_PASSWORD }}
+          DB_PORT: ${{ env.DB_PORT }}
+          DB_USERNAME: ${{ env.DB_USERNAME }}
 
       # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
       - name: Update dependency graph
