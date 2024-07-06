@@ -14,10 +14,11 @@ jobs:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_DATABASE: un0gn58m9mjrc2vw
-          MYSQL_USER: rks2o6t3e2zyd131
-          MYSQL_PASSWORD: iggw8tiy1vlwu3ss
-          MYSQL_ROOT_PASSWORD: pw
+          DB_HOST : 127.0.0.1
+          MYSQL_DATABASE: organizecrm
+          MYSQL_USER: root
+          MYSQL_PASSWORD:
+          MYSQL_ROOT_PASSWORD:
         options: >-
           --health-cmd "mysqladmin ping --silent"
           --health-interval 10s
@@ -52,9 +53,9 @@ jobs:
           # MySQL connection details
           echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
           echo "DB_PORT=3306" >> $GITHUB_ENV
-          echo "DB_NAME=un0gn58m9mjrc2vw" >> $GITHUB_ENV
-          echo "DB_USERNAME=rks2o6t3e2zyd131" >> $GITHUB_ENV
-          echo "DB_PASSWORD=iggw8tiy1vlwu3ss" >> $GITHUB_ENV
+          echo "DB_NAME=organizecrm" >> $GITHUB_ENV
+          echo "DB_USERNAME=root" >> $GITHUB_ENV
+          echo "DB_PASSWORD=" >> $GITHUB_ENV
 
       - name: Run Maven tests
         run: mvn test
