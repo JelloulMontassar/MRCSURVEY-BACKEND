@@ -4,12 +4,16 @@ import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("ci")
+
 class OrganizeCrmApplicationTests {
 
-	@Value("${spring.cloud.config.uri}")
+	@Value("${host}")
 	private String url;
 
 	@Value("${spring.datasource.username}")
