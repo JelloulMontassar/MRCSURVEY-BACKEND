@@ -27,7 +27,7 @@ jobs:
       - name: Fetch secrets from Vault
         id: fetch-secrets
         run: |
-          VAULT_URL="https://my-vault-app-f93d58bccb0a.herokuapp.com"
+          VAULT_URL="my-vault-app-f93d58bccb0a.herokuapp.com"
           VAULT_TOKEN="hvs.CAESIH_7Pz78iq5WeFKFPVdKkwznjB2MCpAdiMHRtQQvBgX2Gh4KHGh2cy5iUndjWVROYjh1Z05MYkVoT2xQWlFIVUo"
           
           # Print environment variables for debugging
