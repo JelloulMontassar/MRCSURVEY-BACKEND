@@ -35,6 +35,7 @@ public class Initialize implements CommandLineRunner {
                     .phoneNumber("88888888")
                     .password(passwordEncoder.encode("admin123"))
                     .role(Role.ADMIN)
+                    .username("ADMIN")
                     .enabled(true)
                     .build();
             userService.createUser(adminUser);
