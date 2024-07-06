@@ -14,7 +14,6 @@ jobs:
       mysql:
         image: mysql:latest
         env:
-          DB_HOST : 127.0.0.1
           MYSQL_DATABASE: organizecrm
           MYSQL_USER: test
           MYSQL_PASSWORD: "123"
@@ -39,10 +38,18 @@ jobs:
 
       - name: Wait for MySQL to be ready
         run: |
-          while ! mysqladmin ping -h"127.0.0.1" --silent; do
-            echo "Waiting for MySQL to be ready..."
+          echo "Waiting for MySQL to be ready..."
+          for i in {30..0}; do
+            if mysqladmin ping -h"127.0.0.1" --silent; then
+              break
+            fi
+            echo 'MySQL is unavailable - sleeping'
             sleep 2
           done
+          if [ "$i" = 0 ]; then
+            echo 'MySQL did not start in time'
+            exit 1
+          fi
 
       - name: Set Environment Variables for Vault and MySQL
         run: |
@@ -55,7 +62,7 @@ jobs:
           echo "DB_PORT=3306" >> $GITHUB_ENV
           echo "DB_NAME=organizecrm" >> $GITHUB_ENV
           echo "DB_USERNAME=test" >> $GITHUB_ENV
-          echo "DB_PASSWORD="123 >> $GITHUB_ENV
+          echo "DB_PASSWORD=123" >> $GITHUB_ENV
 
       - name: Run Maven tests
         run: mvn test
