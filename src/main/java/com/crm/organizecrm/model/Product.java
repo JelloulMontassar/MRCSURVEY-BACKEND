@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 @Getter
 @Setter
 @Entity
@@ -14,9 +18,14 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id ;
-    private String productName ;
-    private String quantity ;
+    private Long id;
+
+    @NotBlank(message = "Product name cannot be blank")
+    @Size(max = 255, message = "Product name must be less than or equal to 255 characters")
+    private String productName;
+
+    @NotBlank(message = "Quantity cannot be blank")
+    private String quantity;
 
     @ManyToOne
     @JsonBackReference
@@ -27,10 +36,10 @@ public class Product {
     private String qrCode;
 
     /*
-    *
-    * might need to add unit price attribute if needed
-    *
-    */
+     *
+     * might need to add unit price attribute if needed
+     *
+     */
 
     /*@ManyToOne
     @JoinColumn(name = "company_id")
