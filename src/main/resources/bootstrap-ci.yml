@@ -10,7 +10,7 @@ spring:
         default-context: database
       application-name: database
   datasource:
-    url: jdbc:mysql://$127.0.0.1:3306/organizecrm
+    url: jdbc:mysql://127.0.0.1:3306/organizecrm
     username: test
     password: 123
     driver-class-name: com.mysql.cj.jdbc.Driver
