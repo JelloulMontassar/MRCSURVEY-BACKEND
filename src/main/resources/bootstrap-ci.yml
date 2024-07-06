@@ -10,7 +10,9 @@ spring:
         default-context: database
       application-name: database
   datasource:
-    url: jdbc:mysql://avnadmin:AVNS_aBP8PTJCEEtEbPR3oXc@mysql-3e23a2db-isamm-f3af.h.aivencloud.com:18050/organizecrm?ssl-mode=REQUIRED
+    url: jdbc:mysql://i943okdfa47xqzpy.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/un0gn58m9mjrc2vw
+    username: rks2o6t3e2zyd131
+    password: iggw8tiy1vlwu3ss
     driver-class-name: com.mysql.cj.jdbc.Driver
 base:
   url: http://localhost:8089
