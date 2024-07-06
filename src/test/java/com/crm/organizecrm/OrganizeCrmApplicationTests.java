@@ -11,7 +11,7 @@ class OrganizeCrmApplicationTests {
 
 	@Test
 	void contextLoads() {
-		System.out.println(url);
+		System.out.println("DATABASE URL " +url);
 	}
 
 }
