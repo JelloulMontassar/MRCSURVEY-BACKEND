@@ -27,4 +27,4 @@ management:
     beans:
       enabled: true
 jwt:
-  secret: ${jwt.secret}
+  secret: ${jwt_secret}
