@@ -26,3 +26,5 @@ management:
       show-details: always
     beans:
       enabled: true
+jwt:
+  secret: ${jwt.secret}

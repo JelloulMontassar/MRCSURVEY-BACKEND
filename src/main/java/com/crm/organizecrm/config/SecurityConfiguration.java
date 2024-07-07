@@ -35,7 +35,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(false);
-        config.addAllowedOrigin("*"); // Only this origin
+        config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));

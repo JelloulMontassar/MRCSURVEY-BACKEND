@@ -21,7 +21,7 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml -Dspring.config.additional-location=file:./src/main/resources/bootstrap-ci.yml
+        run: mvn -B package --file pom.xml
         env:
           SPRING_PROFILES_ACTIVE: ci
 
