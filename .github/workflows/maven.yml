@@ -38,3 +38,9 @@ jobs:
         run: |
           docker build -t montassarjalloul/mrcsurvey:latest .
           docker push montassarjalloul/mrcsurvey:latest
+      - name: Deploy to heroku
+        uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: HRKU-1a279d7d-26f4-4eb
+          heroku_app_name: "test-organizecrm"
+          heroku_email: "montassar.jalloul@isamm.u-manouba.tn"
