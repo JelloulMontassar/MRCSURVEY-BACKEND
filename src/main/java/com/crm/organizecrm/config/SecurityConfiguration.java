@@ -54,6 +54,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                                 .requestMatchers("/config/disableAccount/**", "/config/enableAccount/**", "/config/registerAdmin", "/config/getAllUsers").hasAnyRole("ADMIN")
                                 .requestMatchers("/user/create-hr").hasRole("ADMIN")
                                 .requestMatchers("/products/**").permitAll()
+                                .requestMatchers("/api/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
