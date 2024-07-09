@@ -3,8 +3,6 @@ name: Java CI with Maven and Docker
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build_and_deploy:
@@ -25,9 +23,6 @@ jobs:
         env:
           SPRING_PROFILES_ACTIVE: ci
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -39,16 +34,5 @@ jobs:
           docker build -t montassarjalloul/mrcsurvey:latest .
           docker push montassarjalloul/mrcsurvey:latest
 
-      - name: Install Scalingo CLI
-        run: |
-          curl -O https://cli-dl.scalingo.io/install && bash install
-          export PATH=$PATH:/usr/local/bin
-
-      - name: Log in to Scalingo
-        run: scalingo login --api-token tk-us-1x_HVTg3tFHnF6xWQ6UfSK_tJ0WlX5IvshyUqflMsxBMMO5u
-
-      - name: Set Docker Image
-        run: scalingo --app mrcsurvey env-set DOCKER_IMAGE=montassarjalloul/mrcsurvey:latest
-
-      - name: Restart Application
-        run: scalingo --app mrcsurvey restart
+      - name: Trigger render Deploy
+        run: curl -X POST https://api.render.com/deploy/srv-cq6mbvqju9rs73eb6c9g?key=aAXtEIvXc1o
