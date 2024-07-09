@@ -47,7 +47,8 @@ jobs:
       - name: Log in to Scalingo
         run: scalingo login --api-token tk-us-1x_HVTg3tFHnF6xWQ6UfSK_tJ0WlX5IvshyUqflMsxBMMO5u
 
-      - name: Deploy to Scalingo
-        run: |
-          scalingo --app mrcsurvey env-set DOCKER_IMAGE=mrsurvey:latest
-          scalingo --app mrcsurvey deploy docker montassarjalloul/mrcsurvey:latest
+      - name: Set Docker Image
+        run: scalingo --app mrcsurvey env-set DOCKER_IMAGE=montassarjalloul/mrcsurvey:latest
+
+      - name: Restart Application
+        run: scalingo --app mrcsurvey restart
