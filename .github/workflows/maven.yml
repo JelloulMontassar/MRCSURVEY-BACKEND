@@ -3,6 +3,15 @@ name: Java CI with Maven and Docker
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        options:
+          - staging
+          - production
 
 jobs:
   build_and_deploy:
@@ -29,10 +38,22 @@ jobs:
           username: montassarjalloul
           password: dckr_pat_T-R6Mhh1lBk18vpU5BROmyFAUhM
 
-      - name: Build and Push Docker Image
+      - name: Build and Push Docker Image (Staging)
+        if: github.event.inputs.environment == 'staging'
+        run: |
+          docker build -t montassarjalloul/mrcsurvey:latest .
+          docker push montassarjalloul/mrcsurvey:latest
+      #To be changed later
+      - name: Build and Push Docker Image (Production)
+        if: github.event.inputs.environment == 'production'
         run: |
           docker build -t montassarjalloul/mrcsurvey:latest .
           docker push montassarjalloul/mrcsurvey:latest
 
-      - name: Trigger render Deploy
+      - name: Trigger Render Deploy (Staging)
+        if: github.event.inputs.environment == 'staging'
+        run: curl -X POST https://api.render.com/deploy/srv-cq6mbvqju9rs73eb6c9g?key=aAXtEIvXc1o
+      #To be changed later
+      - name: Trigger Render Deploy (Production)
+        if: github.event.inputs.environment == 'production'
         run: curl -X POST https://api.render.com/deploy/srv-cq6mbvqju9rs73eb6c9g?key=aAXtEIvXc1o
