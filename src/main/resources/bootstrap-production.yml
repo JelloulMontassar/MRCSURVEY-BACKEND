@@ -9,17 +9,25 @@ spring:
         backend: mysql
         default-context: database
       application-name: database
+  h2:
+    console:
+      enabled: false
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=true&verifyServerCertificate=false
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 30000
-      max-lifetime: 1800000
-      connection-timeout: 20000
+        maximum-pool-size: 10
+        minimum-idle: 5
+        idle-timeout: 30000
+        max-lifetime: 1800000
+        connection-timeout: 20000
+  jpa:
+      hibernate:
+        ddl-auto: create-drop
+      show-sql: true
+      database-platform: org.hibernate.dialect.MySQLDialect
 base:
   url: https://mrcsurvey-latest.onrender.com/
 management:
