@@ -26,16 +26,14 @@ public class Subscription {
     private String features;
 
     //@NotNull(message = "Price cannot be null")
-    @Positive(message = "Price must be positive")
+
     private Double price;
 
     //@NotNull(message = "Duration cannot be null")
     @Positive(message = "Duration must be positive")
     private Integer duration;
 
-    @ManyToOne
-    @JoinColumn(name = "hr_user_id")
-    private User hrUser;
+
 
     /*@OneToOne(mappedBy = "subscription")
     private Company company;*/

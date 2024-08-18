@@ -68,8 +68,6 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "hrUser")
     private Company company;
 
-    @OneToMany(mappedBy = "hrUser")
-    private List<Subscription> subscriptions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

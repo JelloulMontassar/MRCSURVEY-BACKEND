@@ -24,7 +24,7 @@ public class SubscriptionDTO {
     private String features;
 
     // @NotNull(message = "Price cannot be null")
-    @Positive(message = "Price must be positive")
+
     private Double price;
 
     // @NotNull(message = "Duration cannot be null")

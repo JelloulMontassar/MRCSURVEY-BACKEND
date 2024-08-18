@@ -38,12 +38,12 @@ public class UserController {
         }
         try {
             UserDTO userDTO = UserDTO.builder()
-                    .username(registerRequest.getUsername())
+                    .username(registerRequest.getEmail())
                     .email(registerRequest.getEmail())
                     .firstName(registerRequest.getFirstName())
                     .lastName(registerRequest.getLastName())
                     .phoneNumber(registerRequest.getPhoneNumber())
-                    .password(registerRequest.getPassword())
+                    .password("Azerty123@#")
                     .build();
             userService.registerAccount(userDTO, Role.HR);
             registerResponse.setEmailResponse(registerRequest.getEmail());
@@ -83,6 +83,10 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+    @GetMapping("/byRole/{role}")
+    public ResponseEntity<List<UserDTO>> getAllUsers(@PathVariable Role role){
+        return ResponseEntity.ok(userService.getAllUsersByRole(role));
     }
 
     @GetMapping("/username/{username}")

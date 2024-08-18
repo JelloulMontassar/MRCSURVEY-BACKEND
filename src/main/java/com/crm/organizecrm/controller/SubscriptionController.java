@@ -1,7 +1,9 @@
 package com.crm.organizecrm.controller;
 
 import com.crm.organizecrm.dto.SubscriptionDTO;
+import com.crm.organizecrm.model.UserSubscription;
 import com.crm.organizecrm.service.SubscriptionService;
+import com.crm.organizecrm.service.UserSubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
+    private final UserSubscriptionService userSubscriptionService;
 
     @PostMapping
     public ResponseEntity<SubscriptionDTO> createSubscription(@Valid @RequestBody SubscriptionDTO subscriptionDTO, BindingResult result) {
@@ -50,5 +53,10 @@ public class SubscriptionController {
     @GetMapping
     public ResponseEntity<List<SubscriptionDTO>> getAllSubscriptions() {
         return ResponseEntity.ok(subscriptionService.getAllSubscriptions());
+    }
+    @PostMapping("/user/{userId}/{subscriptionId}/subscription")
+    public ResponseEntity<UserSubscription> assignSubscription(@PathVariable Long userId, @PathVariable Long subscriptionId) {
+        UserSubscription subscription = userSubscriptionService.assignSubscriptionToUser(subscriptionId, userId);
+        return ResponseEntity.ok(subscription);
     }
 }

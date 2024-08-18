@@ -12,7 +12,6 @@ public class SubscriptionMapper {
                 .features(subscription.getFeatures())
                 .price(subscription.getPrice())
                 .duration(subscription.getDuration())
-                .hrUserId(subscription.getHrUser() != null ? subscription.getHrUser().getId() : null)
                 .build();
     }
 

@@ -2,9 +2,12 @@ package com.crm.organizecrm.serviceImpl;
 
 import com.crm.organizecrm.dto.SubscriptionDTO;
 import com.crm.organizecrm.exception.SubscriptionNotFoundException;
+import com.crm.organizecrm.exception.UserNotFoundException;
 import com.crm.organizecrm.mapper.SubscriptionMapper;
 import com.crm.organizecrm.model.Subscription;
+import com.crm.organizecrm.model.User;
 import com.crm.organizecrm.repository.SubscriptionRepository;
+import com.crm.organizecrm.repository.UserRepository;
 import com.crm.organizecrm.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +21,7 @@ import java.util.stream.Collectors;
 public class SubscriptionServiceImpl implements SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
-
+    private final UserRepository userRepository;
     @Override
     public SubscriptionDTO createSubscription(SubscriptionDTO subscriptionDTO) {
         Subscription subscription = SubscriptionMapper.toEntity(subscriptionDTO);
@@ -54,4 +57,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .map(SubscriptionMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+
+
+
 }

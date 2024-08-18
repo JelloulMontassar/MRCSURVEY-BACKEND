@@ -52,10 +52,12 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                         req
                                 .requestMatchers("/user/authenticate", "/user/ConfirmAccount/**", "/user/forgot-password/**","/actuator/**","/swagger-ui/**","/api-docs","/swagger-config,","/companies/**","/departments/**").permitAll()
                                 .requestMatchers("/config/disableAccount/**", "/config/enableAccount/**", "/config/registerAdmin", "/config/getAllUsers").hasAnyRole("ADMIN")
-                                .requestMatchers("/user/create-hr").hasRole("ADMIN")
+                                .requestMatchers("/users/create-hr").permitAll()
                                 .requestMatchers("/products/**").permitAll()
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
+                                .requestMatchers("/users/byRole/**").permitAll()
+                                .requestMatchers("/subscriptions/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

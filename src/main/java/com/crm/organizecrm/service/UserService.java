@@ -13,6 +13,7 @@ public interface UserService {
     void deleteUser(Long id);
     UserDTO getUserById(Long id);
     List<UserDTO> getAllUsers();
+    List<UserDTO> getAllUsersByRole(Role role);
     UserDTO getUserByUsername(String username);
     UserDTO getUserByEmail(String email);
     void resetPassword(long token, String newPassword);
