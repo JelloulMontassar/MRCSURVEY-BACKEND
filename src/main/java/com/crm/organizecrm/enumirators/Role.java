@@ -1,9 +1,9 @@
 package com.crm.organizecrm.enumirators;
-
 public enum Role {
     ADMIN,
     HR,
-    PRODUCT_RESPONSABLE,
-    EMPLOYEE
+    STOCK_MANAGER,
+    SALES_MANAGER,
+    PRODUCT_MANAGER,
 }
 

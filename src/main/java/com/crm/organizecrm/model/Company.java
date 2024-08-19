@@ -22,9 +22,12 @@ public class Company {
     @NotBlank(message = "Company name cannot be blank")
     @Size(max = 255, message = "Company name must be less than or equal to 255 characters")
     private String name;
-
+    private String email;
+    private String phoneNumber;
+    private String website;
+    private String description;
     @Lob
-    @Column(columnDefinition = "BLOB")
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] logo;
 
     @OneToOne

@@ -58,6 +58,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/users/byRole/**").permitAll()
                                 .requestMatchers("/subscriptions/**").permitAll()
+                                .requestMatchers("/employees/**").permitAll()
+                                .requestMatchers("/companies/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

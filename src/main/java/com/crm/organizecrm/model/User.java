@@ -45,6 +45,7 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     //@NotNull(message = "Role cannot be null")
     private Role role;
 

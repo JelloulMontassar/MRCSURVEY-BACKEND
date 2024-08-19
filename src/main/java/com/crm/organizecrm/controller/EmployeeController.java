@@ -1,10 +1,20 @@
 package com.crm.organizecrm.controller;
 
+import com.crm.organizecrm.dto.CompanyDTO;
 import com.crm.organizecrm.dto.EmployeeDTO;
+import com.crm.organizecrm.dto.UserDTO;
+import com.crm.organizecrm.mapper.UserMapper;
+import com.crm.organizecrm.model.Company;
+import com.crm.organizecrm.model.User;
+import com.crm.organizecrm.service.CompanyService;
 import com.crm.organizecrm.service.EmployeeService;
+import com.crm.organizecrm.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 
@@ -18,12 +28,20 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final UserService userService;
+    private final CompanyService companyService;
 
     @PostMapping
-    public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO, BindingResult result) {
+    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO, BindingResult result, Authentication authentication){
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+        UserDTO hrUser = userService.getUserByEmail(authentication.getName());
+        System.out.println(hrUser.getEmail());
+        CompanyDTO company = companyService.getCompanyByHrUser(UserMapper.toEntity(hrUser));
+        System.out.println(company.getName());
+        employeeDTO.setCompanyId(company.getId());
+        System.out.println(employeeDTO.getEmail());
         return ResponseEntity.ok(employeeService.createEmployee(employeeDTO));
     }
 

@@ -1,11 +1,15 @@
 package com.crm.organizecrm.serviceImpl;
 
 import com.crm.organizecrm.dto.CompanyDTO;
+import com.crm.organizecrm.dto.UserDTO;
 import com.crm.organizecrm.exception.CompanyNotFoundException;
 import com.crm.organizecrm.mapper.CompanyMapper;
+import com.crm.organizecrm.mapper.UserMapper;
 import com.crm.organizecrm.model.Company;
+import com.crm.organizecrm.model.User;
 import com.crm.organizecrm.repository.CompanyRepository;
 import com.crm.organizecrm.service.CompanyService;
+import com.crm.organizecrm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +22,12 @@ import java.util.stream.Collectors;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
-
+    private final UserService userService;
     @Override
     public CompanyDTO createCompany(CompanyDTO companyDTO) {
+        UserDTO hrUser = userService.getUserById(companyDTO.getHrUserId());
         Company company = CompanyMapper.toEntity(companyDTO);
+        company.setHrUser(UserMapper.toEntity(hrUser));
         return CompanyMapper.toDTO(companyRepository.save(company));
     }
 
@@ -51,5 +57,15 @@ public class CompanyServiceImpl implements CompanyService {
         return companyRepository.findAll().stream()
                 .map(CompanyMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public CompanyDTO getCompanyByHrUser(User hrUser) {
+        return CompanyMapper.toDTO(companyRepository.getCompanyByHrUser(hrUser));
+    }
+
+    @Override
+    public Boolean companyExist(User entity) {
+        return companyRepository.existsByHrUser(entity);
     }
 }

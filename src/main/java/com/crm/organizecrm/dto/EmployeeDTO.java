@@ -1,5 +1,7 @@
 package com.crm.organizecrm.dto;
 
+import com.crm.organizecrm.enumirators.Role;
+import jakarta.persistence.Lob;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,17 +17,17 @@ import java.util.List;
 public class EmployeeDTO {
 
     private Long id;
-
-    @NotBlank(message = "Name cannot be blank")
-    @Size(max = 255, message = "Name must be less than or equal to 255 characters")
-    private String name;
-
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Email should be valid")
     private String email;
-
+    private String phoneNumber;
+    private String firstName;
+    private String lastName;
     private Long userId;
+    @Lob
+    private byte[] profileImage;
     private List<Long> clientIds;
     private List<Long> transactionIds;
     private List<Long> stockedProductIds;
+    private Long companyId;
+    private String companyName;
+    private Role role;
 }

@@ -1,5 +1,6 @@
 package com.crm.organizecrm.dto;
 
+import jakarta.persistence.Lob;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +14,12 @@ import jakarta.validation.constraints.Size;
 public class CompanyDTO {
 
     private Long id;
-
-    @NotBlank(message = "Name cannot be blank")
-    @Size(max = 255, message = "Name must be less than or equal to 255 characters")
     private String name;
-
+    private String email;
+    private String phoneNumber;
+    private String website;
+    private String description;
+    @Lob
     private byte[] logo;
     private Long hrUserId;
 }

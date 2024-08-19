@@ -9,6 +9,10 @@ public class CompanyMapper {
         return CompanyDTO.builder()
                 .id(company.getId())
                 .name(company.getName())
+                .email(company.getEmail())
+                .website(company.getWebsite())
+                .description(company.getDescription())
+                .phoneNumber(company.getPhoneNumber())
                 .logo(company.getLogo())
                 .hrUserId(company.getHrUser() != null ? company.getHrUser().getId() : null)
                 .build();
@@ -18,6 +22,10 @@ public class CompanyMapper {
         return Company.builder()
                 .id(companyDTO.getId())
                 .name(companyDTO.getName())
+                .description(companyDTO.getDescription())
+                .email(companyDTO.getEmail())
+                .phoneNumber(companyDTO.getPhoneNumber())
+                .website(companyDTO.getWebsite())
                 .logo(companyDTO.getLogo())
                 .build();
     }
