@@ -30,7 +30,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: montassarjalloul
-          password: dckr_pat_T-R6Mhh1lBk18vpU5BROmyFAUhM
+          password: ${{ SECRET_PASSWORD }}
 
       - name: Build and Push Docker Image (Staging)
         if: ${{ inputs.environment == 'staging' }}
