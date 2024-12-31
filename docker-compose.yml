@@ -11,7 +11,7 @@ services:
     networks:
       - app_network
     environment:
-      - SPRING_PROFILES_ACTIVE=ci
+      - SPRING_PROFILES_ACTIVE=local
 
   nginx:
     image: nginx:latest
