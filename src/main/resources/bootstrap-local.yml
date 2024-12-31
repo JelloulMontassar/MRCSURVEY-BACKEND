@@ -30,7 +30,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
 
 base:
-  url: http://localhost:8089
+  url: http://localhost:8080
 jwt:
   secret: ${jwt_secret}
 server:
